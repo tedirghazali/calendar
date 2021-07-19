@@ -1,0 +1,27 @@
+---
+const { container = 'containerFluid', menuStart = false, menuCenter = false, menuEnd = false } = Astro.props;
+---
+
+<nav class="navBar dark zi-3">
+  <div class={container}>
+    {(menuStart === true) ? (
+      <div class="navMenuStart">
+        <slot name="menuStart"></slot>
+      </div>
+    ) : ''}
+    {(menuCenter === true) ? (
+      <div class="navMenuCenter">
+        <slot name="menuCenter"></slot>
+      </div>
+    ) : (
+      <div class="navMenuFill">
+        <slot></slot>
+      </div>
+    )}
+    {(menuEnd === true) ? (
+      <div class="navMenuEnd">
+        <slot name="menuEnd"></slot>
+      </div>
+    ) : ''}
+  </div>
+</nav>

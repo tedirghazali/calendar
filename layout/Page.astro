@@ -1,0 +1,29 @@
+---
+const { sections = 'page', sectionTop = false, sectionLeft = false, sectionRight = false, sectionBottom = false } = Astro.props;
+---
+
+<div class={sections}>
+  {(sectionTop === true) ? (
+    <div class="sectionTop">
+      <slot name="sectionTop"></slot>
+    </div>
+  ) : ''}
+  {(sectionLeft === true) ? (
+    <div class="sectionLeft">
+      <slot name="sectionLeft"></slot>
+    </div>
+  ) : ''}
+  <div class="sectionMain">
+    <slot></slot>
+  </div>
+  {(sectionRight === true) ? (
+    <div class="sectionRight">
+      <slot name="sectionRight"></slot>
+    </div>
+  ) : ''}
+  {(sectionBottom === true) ? (
+    <div class="sectionBottom">
+      <slot name="sectionBottom"></slot>
+    </div>
+  ) : ''}
+</div>

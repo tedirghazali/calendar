@@ -1,0 +1,23 @@
+{
+  "name": "sastra",
+  "version": "0.0.1-development1",
+  "description": "Sastra is an Astro library or a compilation of Astro components",
+  "main": "index.js",
+  "exports": "./index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tedirghazali/sastra.git"
+  },
+  "keywords": [
+    "library",
+    "components",
+    "astro",
+    "ui"
+  ],
+  "author": "Tedir Ghazali",
+  "license": "SEE LICENSE IN license.txt",
+  "bugs": {
+    "url": "https://github.com/tedirghazali/sastra/issues"
+  },
+  "homepage": "https://github.com/tedirghazali/sastra#readme"
+}
