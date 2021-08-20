@@ -1,9 +1,25 @@
 {
   "name": "sastra",
-  "version": "0.0.1-development1",
-  "description": "Sastra is an Astro library or a compilation of Astro components",
-  "main": "index.js",
-  "exports": "./index.js",
+  "version": "0.0.1-development2",
+  "description": "Sastra is an web components based on Vidie",
+  "main": "dist/sastra.umd.js",
+  "module": "dist/sastra.es.js",
+  "unpkg": "dist/sastra.umd.js",
+  "exports": {
+    ".": {
+      "import": "dist/sastra.min.js",
+      "require": "dist/sastra-umd.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "files": [
+    "src/**/*.js",
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tedirghazali/sastra.git"
@@ -11,7 +27,7 @@
   "keywords": [
     "library",
     "components",
-    "astro",
+    "web",
     "ui"
   ],
   "author": "Tedir Ghazali",
@@ -19,5 +35,11 @@
   "bugs": {
     "url": "https://github.com/tedirghazali/sastra/issues"
   },
-  "homepage": "https://github.com/tedirghazali/sastra#readme"
+  "homepage": "https://github.com/tedirghazali/sastra#readme",
+  "devDependencies": {
+    "vite": "^2.4.4"
+  },
+  "dependencies": {
+    "alga-js": "^0.0.1-beta8"
+  }
 }

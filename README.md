@@ -1,2 +1,2 @@
-# sastra
-Sastra is an [Astro](https://astro.build) library or a compilation of Astro components
+# Sastra
+Sastra is an web components based on Vidie
