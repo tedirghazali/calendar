@@ -1,5 +1,7 @@
-import SDropzone from './src/upload/SDropzone.js'
+import SaDropzone from './src/upload/SaDropzone.js'
 
-export {
-  SDropzone
+const createElem = (tagName, tagObj) => {
+  customElements.define(tagName, tagObj)
 }
+
+export const dropzone = () => createElem('sa-dropzone', SaDropzone)

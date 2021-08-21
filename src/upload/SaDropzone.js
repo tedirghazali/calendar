@@ -1,26 +1,26 @@
-export default class SDropzone extends HTMLElement {
-  static get observedAttributes() { return ['s-model'] }
+export default class SaDropzone extends HTMLElement {
+  static get observedAttributes() { return ['allow'] }
   
   constructor() {
     super()
-    this._dropzoneFiles = []
+    this._dropzoneFiles = [],
+    this._allowFiles = '*'
   }
   
-  get modelValue() {
-    return JSON.stringify(this._dropzoneFiles)
+  get files() {
+    return this._dropzoneFiles
   }
   
-  set modelValue(val) {
-    this.setAttribute('s-model', val)
+  set files(val) {
+    this._dropzoneFiles = val
+  }
+  
+  set allow(val) {
+    this.setAttribute('allow', val)
   }
   
   attributeChangedCallback(name, oldValue, newValue) {
-    const newVal = JSON.parse(newValue)
-    if(Array.isArray(newVal)) {
-      this._dropzoneFiles = newVal
-    } else {
-      this._dropzoneFiles.push(newVal)
-    }
+    this._allowFiles = newValue
   }
   
   connectedCallback() {
@@ -28,7 +28,7 @@ export default class SDropzone extends HTMLElement {
     this.attachShadow({mode: 'open'});
     const template = document.createElement('template');
     template.innerHTML =  `
-      <input type="file" id="dropzoneFile" class="dropzoneFile" ref="dropzoneFile" multiple accept="image/*">
+      <input type="file" id="dropzoneFile" class="dropzoneFile" ref="dropzoneFile" multiple accept="${this._allowFiles}">
       <div id="dropzoneWrapper" class="dropzoneWrapper">
         <label for="dropzoneFile" class="dropzoneLabel">
           <div class="dropzoneIcon"><slot></slot></div>
