@@ -5,7 +5,7 @@ module.exports = defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'lib.js'),
-      name: 'Sastra',
+      name: 'Sa',
       fileName: (format) => `sastra.${format}.js`
     },
     rollupOptions: {

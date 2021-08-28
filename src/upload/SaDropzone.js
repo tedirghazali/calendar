@@ -3,7 +3,7 @@ export default class SaDropzone extends HTMLElement {
   
   constructor() {
     super()
-    this._dropzoneFiles = [],
+    this._dropzoneFiles = []
     this._allowFiles = '*'
   }
   
@@ -24,10 +24,10 @@ export default class SaDropzone extends HTMLElement {
   }
   
   connectedCallback() {
-    this.classList.add('dropzone')
     this.attachShadow({mode: 'open'});
     const template = document.createElement('template');
     template.innerHTML =  `
+    <div class="dropzone">
       <input type="file" id="dropzoneFile" class="dropzoneFile" ref="dropzoneFile" multiple accept="${this._allowFiles}">
       <div id="dropzoneWrapper" class="dropzoneWrapper">
         <label for="dropzoneFile" class="dropzoneLabel">
@@ -39,6 +39,7 @@ export default class SaDropzone extends HTMLElement {
           </div>
         </label>
       </div>
+    </div>
     `
     this.shadowRoot.appendChild(template.content.cloneNode(true))
     
