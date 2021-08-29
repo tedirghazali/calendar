@@ -1,2 +1,2 @@
 # Sastra
-Sastra is an web components based on Vidie
+Sastra is a library for web components based on Vidie

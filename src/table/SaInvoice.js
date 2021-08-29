@@ -1,3 +1,5 @@
+import { number as num } from 'alga-js'
+
 export default class SaInvoice extends HTMLElement {
   static get observedAttributes() { return ['quantity', 'price', 'amount', 'currency', 'locale'] }
   
@@ -12,6 +14,8 @@ export default class SaInvoice extends HTMLElement {
     ]
     this._entries = []
     this._rates = []
+    this._subtotal = 0
+    this._total = 0
     this._quantity = 'quantity'
     this._price = 'price'
     this._amount = 'amount'
@@ -21,6 +25,28 @@ export default class SaInvoice extends HTMLElement {
     
     this.attachShadow({mode: 'open'})
     this.shadowRoot.append(document.createElement('style'))
+    
+    const template = document.createElement('template')
+    template.innerHTML =  `
+    <table class="table tableBorder tableInvoice" role="table">
+      <thead class="tableHead" role="rowgroup">
+        <tr class="tableRow" role="row"></tr>
+      </thead>
+      <tbody class="tableBody" role="rowgroup"></tbody>
+      <tfoot class="tableFoot" role="rowgroup">
+        <tr class="tableRow tableSubTotal" role="row"></tr>
+        <tr class="tableRow tableRate" role="row">
+          <th class="tableScope" scope="row" role="rowheader">Sales Tax</th>
+          <td class="tableCell" role="cell"></td>
+        </tr>
+        <tr class="tableRow tableTotal" role="row">
+          <th class="tableScope" scope="row" role="rowheader">Total</th>
+          <td class="tableCell" role="cell"></td>
+        </tr>
+      </tfoot>
+    </table>
+    `
+    this.shadowRoot.appendChild(template.content.cloneNode(true))
   }
   
   get columns() {
@@ -29,6 +55,7 @@ export default class SaInvoice extends HTMLElement {
   
   set columns(val) {
     this._columns = val
+    this._insertColumns()
   }
   
   get entries() {
@@ -37,6 +64,7 @@ export default class SaInvoice extends HTMLElement {
   
   set entries(val) {
     this._entries = val
+    this._insertEntries()
   }
   
   get rates() {
@@ -70,87 +98,68 @@ export default class SaInvoice extends HTMLElement {
   set styleScoped(val) {
     this._styleScoped = val
     this.shadowRoot.querySelector('style').textContent = this._styleScoped
-    //console.log(this._styleScoped)
   }
   
   attributeChangedCallback(name, oldValue, newValue) {
-    //console.log(name +": "+ newValue)
     if(name === 'quantity') {
       this._quantity = newValue
+      this._insertEntries()
+    } else if(name === 'price') {
+      this._price = newValue
+      this._insertEntries()
+    } else if(name === 'amount') {
+      this._amount = newValue
+      this._insertEntries()
+    } else if(name === 'currency') {
+      this._currency = newValue
+      this._insertEntries()
+    } else if(name === 'locale') {
+      this._locale = newValue
+      this._insertEntries()
     }
   }
   
   connectedCallback() {
-    const template = document.createElement('template')
-    template.innerHTML =  `
-    <table class="table tableBorder tableInvoice" role="table">
-      <colgroup role="colgroup">
-        <col role="col">
-        <col role="col">
-        <col role="col">
-        <col role="col">
-        <col role="col">
-      </colgroup>
-      <thead class="tableHead" role="rowgroup">
-        <tr class="tableRow" role="row">
-          <th class="tableScope" scope="col" role="columnheader" aria-sort="none">SL.</th>
-          <th class="tableScope" scope="col" role="columnheader" aria-sort="none">Item Description</th>
-          <th class="tableScope" scope="col" role="columnheader" aria-sort="none">Quantity</th>
-          <th class="tableScope" scope="col" role="columnheader" aria-sort="none">Price</th>
-          <th class="tableScope" scope="col" role="columnheader" aria-sort="none">Amount</th>
-        </tr>
-      </thead>
-      <tbody class="tableBody" role="rowgroup">
-        <tr class="tableRow" role="row">
-          <td class="tableCell" role="cell"></td>
-          <th class="tableScope" role="rowheader"></th>
-          <td class="tableCell" role="cell"></td>
-          <td class="tableCell" role="cell"></td>
-          <td class="tableCell" role="cell"></td>
-        </tr>
-      </tbody>
-      <tfoot class="tableFoot" role="rowgroup">
-        <tr class="tableRow" role="row">
-          <td class="tableCell" colspan="3" rowspan="2" role="cell"></td>
-          <th class="tableScope" scope="row" role="rowheader">Sub Total</th>
-          <td class="tableCell" role="cell"></td>
-        </tr>
-        <tr class="tableRow" role="row">
-          <th class="tableScope" scope="row" role="rowheader">Total</th>
-          <td class="tableCell" role="cell"></td>
-        </tr>
-      </tfoot>
-    </table>
-    `
-    this.shadowRoot.appendChild(template.content.cloneNode(true))
-    
+    this._insertColumns()
+    this._insertEntries()
+  }
+  
+  _insertColumns() {
+    this.shadowRoot.querySelector('table thead tr').innerHTML = this._columns.map(col => {
+      return `<th class="tableScope" scope="col" role="columnheader" aria-sort="none" style="background-color: ${col.bg}; color: ${col.fg}; width: ${col.width}; text-align: ${col.align};">${col.text}</th>`
+    }).join('')
+  }
+  
+  _insertEntries() {
     let vm = this
-    /*this.shadowRoot.getElementById('dropzoneFile').addEventListener('change', (e) => vm._onChange(e, vm))
-    this.shadowRoot.getElementById('dropzoneWrapper').addEventListener('dragenter', this._onDragEnter)
-    this.shadowRoot.getElementById('dropzoneWrapper').addEventListener('dragover', this._onDragOver)
-    this.shadowRoot.getElementById('dropzoneWrapper').addEventListener('drop', (e) => this._onDrop(e, vm))*/
+    this.shadowRoot.querySelector('table tbody').innerHTML = this._entries.map((entry, index) => {
+      let row = '<tr class="tableRow" role="row">'
+      row += vm._columns.map(col => {
+        let column = ''
+        if(col.name === vm._price) {
+          column = `<td class="tableCell" role="cell" style="background-color: ${col.bg}; color: ${col.fg}; width: ${col.width}; text-align: ${col.align};">${num.currency(entry[col.name], vm._currency, vm._locale)}</td>`
+        } else if(col.name === vm._amount) {
+          const calcAmount = Number(entry[vm._quantity]) * Number(entry[vm._price])
+          vm._entries[index][vm._amount] = calcAmount
+          column = `<td class="tableCell" role="cell" style="background-color: ${col.bg}; color: ${col.fg}; width: ${col.width}; text-align: ${col.align};">${num.currency(calcAmount, vm._currency, vm._locale)}</td>`
+        } else {
+          column = `<td class="tableCell" role="cell" style="background-color: ${col.bg}; color: ${col.fg}; width: ${col.width}; text-align: ${col.align};">${entry[col.name]}</td>`
+        }
+        return column
+      }).join('')
+      row += '</tr>'
+      return row
+    }).join('')
+    this._insertSubTotal()
   }
   
-  /*_onDragEnter(e) {
-    e.preventDefault()
+  _insertSubTotal() {
+    let vm = this
+    this._subtotal = this._entries.map(i => i[this._amount]).reduce((acc, val) => acc + val)
+    this.shadowRoot.querySelector('table tfoot tr.tableSubTotal').innerHTML = `
+      <td class="tableCell" colspan="${Number(vm._columns.length) - 2}" rowspan="${Number(vm._rates.length) + 2}" role="cell"></td>
+      <th class="tableScope" scope="row" role="rowheader">Sub Total</th>
+      <td class="tableCell" role="cell" style="text-align: ${vm._columns[Number(vm._columns.length) - 1].align};">${num.currency(this._subtotal, vm._currency, vm._locale)}</td>
+    `
   }
-  
-  _onDragOver(e) {
-    e.preventDefault()
-  }
-  
-  _onDrop(e) {
-    e.preventDefault()
-    const dropzoneValue = e.target.files || e.dataTransfer.files
-    for(let i = 0; i < dropzoneValue.length; i++) {
-      this._columns.unshift(dropzoneValue[i])
-    }
-  }
-  
-  _onChange(e, vm) {
-    const dropzoneValue = e.target.files || e.dataTransfer.files
-    for(let i = 0; i < dropzoneValue.length; i++) {
-      vm._columns.unshift(dropzoneValue[i])
-    }
-  }*/
 }

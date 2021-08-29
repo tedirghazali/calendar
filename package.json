@@ -1,7 +1,7 @@
 {
   "name": "sastra",
   "version": "0.0.1-development2",
-  "description": "Sastra is an web components based on Vidie",
+  "description": "Sastra is a library for web components based on Vidie",
   "main": "dist/sastra.umd.js",
   "module": "dist/sastra.es.js",
   "unpkg": "dist/sastra.umd.js",
