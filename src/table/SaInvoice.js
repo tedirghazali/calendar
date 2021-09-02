@@ -21,7 +21,93 @@ export default class SaInvoice extends HTMLElement {
     this._amount = 'amount'
     this._currency = 'USD'
     this._locale = 'en-US'
-    this._styleScoped = ''
+    this._styleScoped = `
+      .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        caption-side: bottom;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        color: #212529;
+        border-color: #dee2e6;
+        font-family: Calibri, Arial, sans-serif;
+      }
+      .tableCaption {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        text-align: left;
+        color: #6c757d;
+      }
+      .tableScope {
+        text-align: inherit;
+        text-align: -webkit-match-parent;
+      }
+      .tableHead,
+      .tableBody,
+      .tableFoot,
+      .tableRow,
+      .tableCell, 
+      .tableScope {
+        border-color: inherit;
+        border-style: solid;
+        border-width: 0px;
+      }
+      .table > :not(.tableCaption) > * > * {
+        padding: 0.5rem;
+        border-bottom-width: 1px;
+        background-color: transparent;
+      }
+      .tableSmall > :not(.tableCaption) > * > * {
+        padding: 0.25rem;
+        border-bottom-width: 1px;
+        background-color: transparent;
+      }
+      .table.tableLarge > :not(.tableCaption) > * > * {
+        padding: 0.75rem;
+        border-bottom-width: 1px;
+        background-color: transparent;
+      }
+      .table > .tableBody {
+        vertical-align: inherit;
+      }
+      .table > .tableHead {
+        vertical-align: bottom;
+      }
+      .table > :not(:last-child) > :last-child > * {
+        border-bottom-color: inherit;
+      }
+      .tableCaptionTop {
+        caption-side: top;
+      }
+      .tableBorder > :not(.tableCaption) > * {
+        border-top-width: 1px;
+        border-bottom-width: 1px;
+        border-right-width: 0px;
+        border-left-width: 0px;
+      }
+      .tableBorder > :not(.tableCaption) > * > * {
+        border-top-width: 0px;
+        border-bottom-width: 0px;
+        border-right-width: 1px;
+        border-left-width: 1px;
+      }
+      .tableBorderless > :not(.tableCaption) > * > * {
+        border-bottom-width: 0px;
+      }
+      .tableStripe > .tableBody > .tableRow:nth-of-type(odd) {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+      .tableActive {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+      .tableHover > .tableBody > .tableRow:hover {
+        background-color: rgba(0, 0, 0, 0.075);
+      }
+      .tableResponsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    `
     
     this.attachShadow({mode: 'open'})
     this.shadowRoot.append(document.createElement('style'))
@@ -35,14 +121,8 @@ export default class SaInvoice extends HTMLElement {
       <tbody class="tableBody" role="rowgroup"></tbody>
       <tfoot class="tableFoot" role="rowgroup">
         <tr class="tableRow tableSubTotal" role="row"></tr>
-        <tr class="tableRow tableRate" role="row">
-          <th class="tableScope" scope="row" role="rowheader">Sales Tax</th>
-          <td class="tableCell" role="cell"></td>
-        </tr>
-        <tr class="tableRow tableTotal" role="row">
-          <th class="tableScope" scope="row" role="rowheader">Total</th>
-          <td class="tableCell" role="cell"></td>
-        </tr>
+        <tr class="tableRow tableRate" role="row"></tr>
+        <tr class="tableRow tableTotal" role="row"></tr>
       </tfoot>
     </table>
     `
@@ -56,6 +136,7 @@ export default class SaInvoice extends HTMLElement {
   set columns(val) {
     this._columns = val
     this._insertColumns()
+    this._insertSubTotal()
   }
   
   get entries() {
@@ -73,6 +154,8 @@ export default class SaInvoice extends HTMLElement {
   
   set rates(val) {
     this._rates = val
+    this._insertSubTotal()
+    this._insertRates()
   }
   
   set quantity(val) {
@@ -122,6 +205,7 @@ export default class SaInvoice extends HTMLElement {
   connectedCallback() {
     this._insertColumns()
     this._insertEntries()
+    this.shadowRoot.querySelector('style').textContent = this._styleScoped
   }
   
   _insertColumns() {
@@ -155,11 +239,48 @@ export default class SaInvoice extends HTMLElement {
   
   _insertSubTotal() {
     let vm = this
-    this._subtotal = this._entries.map(i => i[this._amount]).reduce((acc, val) => acc + val)
+    this._subtotal = (this._entries.length >= 1) ? this._entries.map(i => i[this._amount]).reduce((acc, val) => acc + val) : 0
     this.shadowRoot.querySelector('table tfoot tr.tableSubTotal').innerHTML = `
       <td class="tableCell" colspan="${Number(vm._columns.length) - 2}" rowspan="${Number(vm._rates.length) + 2}" role="cell"></td>
       <th class="tableScope" scope="row" role="rowheader">Sub Total</th>
-      <td class="tableCell" role="cell" style="text-align: ${vm._columns[Number(vm._columns.length) - 1].align};">${num.currency(this._subtotal, vm._currency, vm._locale)}</td>
+      <td class="tableCell" role="cell" style="text-align: ${vm._columns[Number(vm._columns.length) - 1].align};">${num.currency(vm._subtotal, vm._currency, vm._locale)}</td>
+    `
+    this._insertRates()
+  }
+  
+  _insertRates() {
+    let vm = this
+    const tableRates = [].slice.call(this.shadowRoot.querySelectorAll('table tfoot tr.tableRate'))
+    for(let tbRate of tableRates) {
+      tbRate.remove()
+    }
+    let rateNodes = ''
+    this._rates.forEach((rate, index) => {
+      if(rate.type === 'percent') {
+        this._rates[index]['result'] = (Number(rate[this._amount]) / 100) * Number(this._subtotal)
+      } else {
+        this._rates[index]['result'] = rate[this._amount]
+      }
+      rateNodes += `
+        <tr class="tableRow tableRate" role="row">
+          <th class="tableScope" scope="row" role="rowheader">${rate.text}</th>
+          <td class="tableCell" role="cell" style="text-align: ${vm._columns[Number(vm._columns.length) - 1].align};">${num.currency(this._rates[index]['result'], vm._currency, vm._locale)}</td>
+        </tr>
+      `
+    })
+    this.shadowRoot.querySelector('table tfoot tr.tableSubTotal').insertAdjacentHTML('afterend', rateNodes)
+    this._insertTotal()
+  }
+  
+  _insertTotal() {
+    let vm = this
+    this._total = this._subtotal
+    for(let rate of this._rates) {
+      this._total = (rate.calc === 'subtraction') ? Number(this._total) - Number(rate.result) : Number(this._total) + Number(rate.result)
+    }
+    this.shadowRoot.querySelector('table tfoot tr.tableTotal').innerHTML = `
+      <th class="tableScope" scope="row" role="rowheader">Total</th>
+      <td class="tableCell" role="cell" style="text-align: ${vm._columns[Number(vm._columns.length) - 1].align};">${num.currency(this._total, vm._currency, vm._locale)}</td>
     `
   }
 }
