@@ -1,2 +1,2 @@
-# Sastra
-Sastra is a library for web components based on Vidie
+# Vidie Calendar
+Vidie Calendar is a Vue 3 Event Calendar

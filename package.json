@@ -1,14 +1,14 @@
 {
-  "name": "sastra",
-  "version": "0.0.1-development3",
-  "description": "Sastra is a library for web components based on Vidie",
-  "main": "dist/sastra.umd.js",
-  "module": "dist/sastra.es.js",
-  "unpkg": "dist/sastra.umd.js",
+  "name": "vidie-calendar",
+  "version": "0.0.1-wood1",
+  "description": "Vidie Calendar is a Vue 3 Event Calendar",
+  "main": "dist/vidie-calendar.umd.js",
+  "module": "dist/vidie-calendar.es.js",
+  "unpkg": "dist/vidie-calendar.umd.js",
   "exports": {
     ".": {
-      "import": "dist/sastra.es.js",
-      "require": "dist/sastra.umd.js"
+      "import": "dist/vidie-calendar.es.js",
+      "require": "dist/vidie-calendar.umd.js"
     }
   },
   "scripts": {
@@ -22,25 +22,27 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tedirghazali/sastra.git"
+    "url": "git+https://github.com/tedirghazali/calendar.git"
   },
   "keywords": [
-    "library",
-    "components",
-    "web",
-    "ui"
+    "calendar",
+    "event-calendar",
+    "event",
+    "vue3calendar"
   ],
   "author": "Tedir Ghazali",
   "license": "SEE LICENSE IN license.txt",
   "bugs": {
-    "url": "https://github.com/tedirghazali/sastra/issues"
+    "url": "https://github.com/tedirghazali/calendar/issues"
   },
-  "homepage": "https://github.com/tedirghazali/sastra#readme",
+  "homepage": "https://github.com/tedirghazali/calendar#readme",
   "devDependencies": {
-    "vite": "^2.4.4"
+    "@vitejs/plugin-vue": "^1.9.4",
+    "typescript": "^4.4.4",
+    "vite": "^2.6.13",
+    "vue-tsc": "^0.28.10"
   },
   "dependencies": {
-    "alga-css": "^1.0.0-development8",
-    "alga-js": "^0.0.3"
+    "vue": "^3.2.20"
   }
 }
