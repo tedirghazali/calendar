@@ -1,23 +1,28 @@
 {
-  "name": "vidie-calendar",
+  "name": "tedir-calendar",
   "version": "0.0.1-wood1",
-  "description": "Vidie Calendar is a Vue 3 Event Calendar",
-  "main": "dist/vidie-calendar.umd.js",
-  "module": "dist/vidie-calendar.es.js",
-  "unpkg": "dist/vidie-calendar.umd.js",
+  "description": "Tedir Calendar is a Vue 3 & Web Component Event Calendar",
+  "main": "dist/tedir-calendar-vue.umd.js",
+  "module": "dist/tedir-calendar-vue.es.js",
+  "unpkg": "dist/tedir-calendar-vue.umd.js",
   "exports": {
     ".": {
-      "import": "dist/vidie-calendar.es.js",
-      "require": "dist/vidie-calendar.umd.js"
+      "import": "dist/tedir-calendar-vue.es.js",
+      "require": "dist/tedir-calendar-vue.umd.js"
+    },
+    "./web": {
+      "import": "dist/web/tedir-calendar-web.es.js",
+      "require": "dist/web/tedir-calendar-web.umd.js"
     }
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview"
+    "dev-vue": "vite --config vite-vue-config.ts",
+    "build-vue": "vue-tsc --noEmit && vite build --config vite-vue-config.ts",
+    "build-web": "vue-tsc --noEmit && vite build --config vite-web-config.ts",
+    "preview-vue": "vite preview --config vite-vue-config.ts"
   },
   "files": [
-    "src/**/*.js",
+    "src",
     "dist"
   ],
   "repository": {
