@@ -1,31 +1,56 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import useCalendar from '../composables/useCalendar'
 
 interface Props {
-  modelValue?: any
+  modelValue?: Date,
+  locale?: string,
+  type?: string,
+  size?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: new Date()
+  modelValue: new Date(),
+  locale: 'en-US',
+  type: 'narrow',
+  size: 40
 })
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: any): void
+  (e: 'update:modelValue', value: Date): void
 }>()
 
-const { days, daysInMonth, daysInPrevMonth, daysInNextMonth } = useCalendar()
+const year = ref<number>(props.modelValue?.getFullYear() || new Date().getFullYear())
+const month = ref<number>(props.modelValue?.getMonth() || new Date().getMonth())
+const date = ref<number>(props.modelValue?.getDate() || new Date().getDate())
+const locale = ref<string>(props.locale || 'en-US')
+const daytype = ref<any>({ weekday: props.type || 'narrow' })
+const size = ref<number>(props.size || 40)
+
+watch(() => props.modelValue, () => {
+  year.value = props.modelValue?.getFullYear() || new Date().getFullYear()
+  month.value = props.modelValue?.getMonth() || new Date().getMonth()
+  date.value = props.modelValue?.getDate() || new Date().getDate()
+})
+
+const { days, daysInMonth, daysInPrevMonth, daysInNextMonth } = useCalendar(year, month, date, locale, daytype)
 
 const splitDate = (dateArg: string) => {
   return dateArg.split('-')
 }
 
-const weeks = ['W1', 'W2', 'W3', 'W4', 'W5', 'W6']
+const weeks = ['1', '2', '3', '4', '5', '6']
 const count = ref(0)
+
+const selectDate = (yr, mn, dy) => {
+  date.value = dy
+  const newDate = new Date(yr, mn, dy)
+  emit('update:modelValue', newDate)
+}
 </script>
 
 <template>
-  <div class="calendar">
+  <div class="calendar hasWeek">
     <div class="calendarDay">
       <div class="dayGrid">
         <div v-for="day in days" class="dayItem">
@@ -34,30 +59,28 @@ const count = ref(0)
       </div>
     </div>
     <div class="calendarMonth">
-      <div class="monthGrid" style="height: 800px;">
-        <div v-for="prevNum in daysInPrevMonth" :key="prevNum" class="monthItem">
+      <div class="monthGrid">
+        <div v-for="prevNum in daysInPrevMonth" :key="prevNum" class="monthItem readOnlyItem">
           <div class="monthHeader">{{ prevNum }}</div>
           <div class="monthBody"></div>
-          <div class="monthFooter"></div>
         </div>
-        <div v-for="dayNum in daysInMonth" :key="dayNum" class="monthItem">
+        <div v-for="dayNum in daysInMonth" :key="dayNum" class="monthItem" :class="{active: date === dayNum, current: Number(new Date().getDate()) === dayNum}" @click.stop="selectDate(year, month, dayNum)">
           <div class="monthHeader">{{ dayNum }}</div>
           <div class="monthBody"></div>
-          <div class="monthFooter"></div>
         </div>
-        <div v-for="nextNum in daysInNextMonth" :key="nextNum" class="monthItem">
+        <div v-for="nextNum in daysInNextMonth" :key="nextNum" class="monthItem readOnlyItem">
           <div class="monthHeader">{{ nextNum }}</div>
           <div class="monthBody"></div>
-          <div class="monthFooter"></div>
         </div>
       </div>
     </div>
     <div class="calendarWeek">
       <div class="weekWrap">
-        <div class="weekDay">Week</div>
-        <div class="weekGrid" style="height: 800px;">
-          <div v-for="week in weeks" class="weekItem">
-            {{ week }}
+        <div class="weekDay readOnlyItem">W</div>
+        <div class="weekGrid">
+          <div v-for="week in weeks" class="weekItem readOnlyItem">
+            <div class="monthHeader">{{ week }}</div>
+            <div class="monthBody"></div>
           </div>
         </div>
       </div>
@@ -66,88 +89,6 @@ const count = ref(0)
 </template>
 
 <style scoped>
-.calendar {
-  display: grid;
-  grid-template-areas: "weekGrid dayGrid" "weekGrid monthGrid" "weekGrid monthGrid";
-  grid-template-columns: auto 1fr;
-}
-
-.calendarDay {
-  grid-area: dayGrid;
-}
-
-.calendarMonth {
-  grid-area: monthGrid;
-}
-
-.calendarWeek {
-  grid-area: weekGrid;
-}
-
-.dayGrid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  width: 100%;
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
-  border-right: 1px solid rgba(0, 0, 0, 0.15);
-}
-
-.dayItem {
-  border-left: 1px solid rgba(0, 0, 0, 0.15);
-  padding: 10px;
-  text-align: center;
-}
-
-.weekWrap {
-  height: 100%;
-}
-
-.weekDay {
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
-  border-left: 1px solid rgba(0, 0, 0, 0.15);
-  padding: 10px;
-  text-align: center;
-}
-
-.weekGrid {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  grid-auto-rows: minmax(16.666666667%, 1fr);
-  height: 100%;
-  border-left: 1px solid rgba(0, 0, 0, 0.15);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-}
-
-.weekItem {
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
-  padding: 10px;
-  text-align: center;
-}
-
-.monthGrid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  grid-auto-rows: minmax(16.666666667%, 1fr);
-  width: 100%;
-  height: 100%;
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
-  border-right: 1px solid rgba(0, 0, 0, 0.15);
-}
-
-.monthItem {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-  border-left: 1px solid rgba(0, 0, 0, 0.15);
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.monthHeader {
-  text-align: right;
-}
-
-.monthBody {
-  flex-grow: 1;
-}
+@use calendarLayout;
+@use calendarBox;
 </style>

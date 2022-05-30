@@ -1,0 +1,23 @@
+@alga calendarLayout {
+  .calendar {
+    ref: display-grid width-auto;
+    ref-fontFamily: Arial, sans-serif;
+  }
+  
+  .calendar.hasWeek {
+    ref-gridTemplateAreas: "weekGrid dayGrid" "weekGrid monthGrid" "weekGrid monthGrid";
+    ref-gridTemplateColumns: auto 1fr;
+  }
+
+  .calendarDay {
+    ref-gridArea: dayGrid;
+  }
+
+  .calendarMonth {
+    ref-gridArea: monthGrid;
+  }
+
+  .calendarWeek {
+    ref-gridArea: weekGrid;
+  }
+}

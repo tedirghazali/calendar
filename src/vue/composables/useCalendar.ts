@@ -5,9 +5,9 @@ const arg: Ref<T> = (val: T) => {
 }
 
 export default function useCalendar(
-  getYearRef: Ref<number> = arg<number>(2021), 
-  getMonthRef: Ref<number> = arg<number>(11), 
-  getDayRef: Ref<number> = arg<number>(9), 
+  getYearRef: Ref<number> = arg<number>(new Date().getFullYear()), 
+  getMonthRef: Ref<number> = arg<number>(new Date().getMonth()), 
+  getDayRef: Ref<number> = arg<number>(new Date().getDate()), 
   getLocaleRef: Ref<string> = arg<string>('en-US'), 
   getOptionRef: Ref<any> = arg<any>({ weekday: 'long' })
 ) {
