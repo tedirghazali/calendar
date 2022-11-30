@@ -89,6 +89,6 @@ const selectDate = (yr, mn, dy) => {
 </template>
 
 <style scoped>
-@use calendarLayout;
-@use calendarBox;
+@use tedirLayoutCalendar;
+@use tedirCalendar;
 </style>

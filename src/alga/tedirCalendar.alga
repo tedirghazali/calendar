@@ -1,4 +1,8 @@
-@alga calendarBox {
+@define refs {
+  name: tedirCalendar;
+}
+
+@alga {refs.name} {
   .dayGrid {
     ref: display-grid width-330px;
     ref-gridTemplateColumns: repeat(7, 1fr);
@@ -7,9 +11,9 @@
   }
 
   .dayItem {
-    ref: textAlign-center width-40px;
+    ref: textAlign-center;
     ref-borderLeft: 1px solid rgba(0, 0, 0, 0.15);
-    ref-padding: 10px 0;
+    ref-padding: 0.5rem 0;
   }
 
   .weekWrap {
@@ -17,10 +21,10 @@
   }
 
   .weekDay {
-    ref: textAlign-center width-40px;
+    ref: textAlign-center width-45px;
     ref-borderTop: 1px solid rgba(0, 0, 0, 0.15);
     ref-borderLeft: 1px solid rgba(0, 0, 0, 0.15);
-    ref-padding: 10px 0;
+    ref-padding: 0.5rem 0;
   }
 
   .weekGrid {
@@ -31,9 +35,9 @@
   }
 
   .weekItem {
-    ref: display-flex flexDirection-column justifyContent-center alignItems-center width-40px;
+    ref: display-flex flexDirection-column justifyContent-center alignItems-center width-45px;
     ref-borderTop: 1px solid rgba(0, 0, 0, 0.15);
-    ref-padding: 10px 0;
+    ref-padding: 0.5rem 0;
   }
 
   .monthGrid {
@@ -47,7 +51,7 @@
     ref: display-flex flexDirection-column justifyContent-center alignItems-center cursor-default;
     ref-borderBottom: 1px solid rgba(0, 0, 0, 0.15);
     ref-borderLeft: 1px solid rgba(0, 0, 0, 0.15);
-    ref-padding: 10px 0;
+    ref-padding: 0.5rem 0;
   }
 
   .readOnlyItem {

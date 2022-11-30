@@ -1,8 +1,11 @@
 import { defineCustomElement } from 'vue'
-import VueDataTable from '../vue/components/DataTable.vue'
+import VueCalendarBox from '../vue/components/CalendarBox.vue'
+import VueDatePicker from '../vue/components/DatePicker.vue'
 
-export const DataTable = defineCustomElement(VueDataTable)
+export const CalendarBox = defineCustomElement(VueCalendarBox)
+export const DatePicker = defineCustomElement(VueDatePicker)
 
-export function useTedirTable() {
-  customElements.define('data-table', DataTable)
+export function useTedirEditor() {
+  customElements.define('calendar-box', CalendarBox)
+  customElements.define('date-picker', DatePicker)
 }

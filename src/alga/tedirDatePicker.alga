@@ -1,0 +1,20 @@
+@define refs {
+  name: tedirDatePicker;
+}
+
+@alga {refs.name} {
+  .{refs.name} {
+  
+    .tedirDateControl {
+      ref: d-flex p-0.75rem;
+      
+      .tedirDateCenter {
+        ref: flexGrow-1;
+      }
+    }
+    
+    .tedirDateCalendar {
+      ref: p-0.75rem fs-0.85rem;
+    }
+  }
+}

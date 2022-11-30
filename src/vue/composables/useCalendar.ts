@@ -38,7 +38,7 @@ export default function useCalendar(
   
   const daysInNextMonth = computed<number>(() => {
     const getDay = new Date(Date.UTC(getYearRef.value, Number(getMonthRef.value) - 1, daysInMonth.value)).getUTCDay()
-    return (6 - Number(getDay)) + 7
+    return (6 - Number(getDay))
   })
   
   return {

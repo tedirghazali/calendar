@@ -1,4 +1,8 @@
-@alga calendarLayout {
+@define refs {
+  name: tedirLayoutCalendar;
+}
+
+@alga {refs.name} {
   .calendar {
     ref: display-grid width-auto;
     ref-fontFamily: Arial, sans-serif;

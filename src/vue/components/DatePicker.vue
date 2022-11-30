@@ -44,20 +44,22 @@ const randomChar = (maxlength: number = 10) => {
 }
 
 const hideByClick = (e: any) => {
-  e.target.style.display = 'none' 
   picker.value = false
 }
 </script>
 
 <template>
-  <div class="picker" :class="picker ? 'active' : ''">
-    <teleport to="body">
-      <div class="pickerBackdrop" :style="{display: picker ? 'block' : 'none'}" @click="hideByClick"></div>
-    </teleport>
-    <div class="pickerContent">
+  <div class="picker tedirDatePicker" :class="picker ? 'active' : ''">
+    <div class="pickerBackdrop" @click="hideByClick"></div>
+    <div class="pickerWrap">
       <input type="search" v-model="selected" @click="picker = !picker" class="input" style="cursor: default; caret-color: transparent;" />
-      <div class="pickerBody" style="width: auto;">
-        <CalendarBox v-model="selected" />
+      <div class="pickerContent" style="width: auto;">
+        <div class="tedirDateControl">
+          <div class="tedirDateStart"></div>
+          <div class="tedirDateCenter"></div>
+          <div class="tedirDateEnd"></div>
+        </div>
+        <CalendarBox v-model="selected" class="tedirDateCalendar" />
       </div>
     </div>
   </div>
@@ -68,4 +70,5 @@ const hideByClick = (e: any) => {
 @use form {
   field: input;
 }
+@use tedirDatePicker;
 </style>

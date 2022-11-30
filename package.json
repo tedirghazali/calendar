@@ -23,7 +23,8 @@
     "preview-vue": "vite preview --config vite-vue-config.ts"
   },
   "files": [
-    "src",
+    "src/alga/*.alga",
+    "package.alga",
     "dist"
   ],
   "repository": {
@@ -34,7 +35,11 @@
     "calendar",
     "event-calendar",
     "event",
-    "vue3calendar"
+    "vue3calendar",
+    "datepicker",
+    "timepicker",
+    "datetimepicker",
+    "daterangepicker"
   ],
   "author": "Tedir Ghazali",
   "license": "SEE LICENSE IN license.txt",
@@ -43,13 +48,13 @@
   },
   "homepage": "https://github.com/tedirghazali/calendar#readme",
   "devDependencies": {
-    "@vitejs/plugin-vue": "^1.9.4",
-    "typescript": "^4.4.4",
-    "vite": "^2.6.13",
-    "vue-tsc": "^0.28.10"
+    "@vitejs/plugin-vue": "^3.2.0",
+    "alga-css": "^1.0.0-emerald-3",
+    "typescript": "^4.6.4",
+    "vite": "^3.2.4",
+    "vue-tsc": "^1.0.9"
   },
   "dependencies": {
-    "alga-css": "^1.0.0-stone-8",
-    "vue": "^3.2.20"
+    "vue": "^3.2.45"
   }
 }
