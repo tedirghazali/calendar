@@ -4,28 +4,33 @@ import useCalendar from '../composables/useCalendar'
 
 interface Props {
   modelValue?: Date,
+  year?: number,
+  month?: number,
   locale?: string,
   type?: string,
-  size?: number
+  size?: string,
+  
 }
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: new Date(),
+  year: new Date().getFullYear(),
+  month: Number(new Date().getMonth()) + 1,
   locale: 'en-US',
   type: 'narrow',
-  size: 40
+  size: 'medium'
 })
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: Date): void
+  (e: 'update:modelValue', value: Date): void,
+  (e: 'handler', value: any[] | any): void
 }>()
 
-const year = ref<number>(props.modelValue?.getFullYear() || new Date().getFullYear())
-const month = ref<number>(props.modelValue?.getMonth() || new Date().getMonth())
+const year = ref<number>(props?.year || new Date().getFullYear())
+const month = ref<number>(props?.month || Number(new Date().getMonth()) + 1)
 const date = ref<number>(props.modelValue?.getDate() || new Date().getDate())
 const locale = ref<string>(props.locale || 'en-US')
 const daytype = ref<any>({ weekday: props.type || 'narrow' })
-const size = ref<number>(props.size || 40)
 
 watch(() => props.modelValue, () => {
   year.value = props.modelValue?.getFullYear() || new Date().getFullYear()
@@ -46,11 +51,12 @@ const selectDate = (yr, mn, dy) => {
   date.value = dy
   const newDate = new Date(yr, mn, dy)
   emit('update:modelValue', newDate)
+  emit('handler', newDate)
 }
 </script>
 
 <template>
-  <div class="calendar hasWeek">
+  <div class="calendar hasWeek" :class="{'calendarSmall': props?.size === 'small'}">
     <div class="calendarDay">
       <div class="dayGrid">
         <div v-for="day in days" class="dayItem">

@@ -5,16 +5,32 @@
 @alga {refs.name} {
   .{refs.name} {
   
+    .tedirDateInput {
+      ref: cursor-default caretColor-transparent;
+    }
+  
+    .pickerContent {
+      ref: width-auto;
+    }
+  
     .tedirDateControl {
-      ref: d-flex p-0.75rem;
+      ref: display-flex alignItems-center padding-0.75rem;
       
       .tedirDateCenter {
-        ref: flexGrow-1;
+        ref: flexGrow-1 display-flex justifyContent-center;
+        
+        .tedirDateMonth {
+          ref: width-auto marginLeft-0.75rem marginRight-0.75rem paddingRight-2.25rem;
+        }
+        
+        .tedirDateYear {
+          ref: width-auto marginRight-0.75rem paddingRight-2.25rem;
+        }
       }
     }
     
     .tedirDateCalendar {
-      ref: p-0.75rem fs-0.85rem;
+      ref: paddingBottom-0.75rem paddingLeft-0.75rem paddingRight-0.75rem fs-0.85rem;
     }
   }
 }

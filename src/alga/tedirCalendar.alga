@@ -73,4 +73,16 @@
   .monthBody {
     ref: flexGrow-1;
   }
+  
+  .calendarSmall {
+    .dayGrid,
+    .monthGrid {
+      ref: width-250px;
+    }
+    
+    .weekDay,
+    .weekItem {
+      ref: width-35px;
+    }
+  }
 }
