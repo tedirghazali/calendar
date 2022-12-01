@@ -5,12 +5,10 @@ import CalendarBox from './CalendarBox.vue'
 
 interface Props {
   modelValue?: any,
-  //@ts-ignore
-  options?: any[],
-  prop?: string,
   placeholder?: string,
-  size?: number,
-  locale?: string
+  mode?: string,
+  locale?: string,
+  option?: any,
 }
 
 interface Emits {
@@ -20,12 +18,10 @@ interface Emits {
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: new Date(),
-  //@ts-ignore
-  options: [],
-  prop: 'value',
   placeholder: '',
-  size: 0,
-  locale: 'id-ID'
+  mode: 'dataTime',
+  locale: 'id-ID',
+  option: {}
 })
 
 const emit = defineEmits<Emits>()
@@ -88,13 +84,23 @@ const monthControlHandler = (btnControl: string) => {
   }
   month.value = monthNum
 }
+
+const dateInputValue = computed<any>(() => {
+  let newInputValue = new Date(selected.value).toLocaleString(props?.locale || 'id-ID', props?.option || {})
+  if(props?.mode && props.mode === 'date') {
+    newInputValue = new Date(selected.value).toLocaleDateString(props?.locale || 'id-ID', props?.option || {})
+  } else if(props?.mode && props.mode === 'time') {
+    newInputValue = new Date(selected.value).toLocaleTimeString(props?.locale || 'id-ID', props?.option || {})
+  }
+  return newInputValue
+})
 </script>
 
 <template>
   <div class="picker tedirDatePicker" :class="picker ? 'active' : ''">
     <div class="pickerBackdrop" @click="hideByClick"></div>
     <div class="pickerWrap">
-      <input type="text" :value="new Date(selected).toLocaleString(props?.locale || 'id-ID')" @click="picker = !picker" class="input tedirDateInput" :placeholder="placeholder" />
+      <input type="text" :value="dateInputValue" @click="picker = !picker" class="input tedirDateInput" :placeholder="placeholder" />
       <div class="pickerContent">
         <div class="tedirDateControl">
           <div class="tedirDateStart" @click="monthControlHandler('prev')">

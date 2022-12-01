@@ -85,7 +85,7 @@ const currentHandler = (dy: number) => {
 </script>
 
 <template>
-  <div class="calendar" :class="{hasWeek: props?.week, calendarSmall: props?.size === 'small'}">
+  <div class="calendar tedirCalendar" :class="{hasWeek: props?.week, tedirCalendarSmall: props?.size === 'small'}">
     <div class="calendarDay">
       <div class="dayGrid">
         <div v-for="day in days" class="dayItem">

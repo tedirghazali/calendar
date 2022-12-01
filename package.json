@@ -1,14 +1,14 @@
 {
   "name": "tedir-calendar",
-  "version": "0.0.1-wood-1",
+  "version": "0.0.1-wood-2",
   "description": "Tedir Calendar is a Vue 3 & Web Component Event Calendar",
-  "main": "dist/tedir-calendar-vue.umd.js",
-  "module": "dist/tedir-calendar-vue.es.js",
-  "unpkg": "dist/tedir-calendar-vue.umd.js",
+  "main": "dist/vue/tedir-calendar-vue.umd.js",
+  "module": "dist/vue/tedir-calendar-vue.es.js",
+  "unpkg": "dist/vue/tedir-calendar-vue.umd.js",
   "exports": {
     ".": {
-      "import": "./dist/tedir-calendar-vue.es.js",
-      "require": "./dist/tedir-calendar-vue.umd.js"
+      "import": "./dist/vue/tedir-calendar-vue.es.js",
+      "require": "./dist/vue/tedir-calendar-vue.umd.js"
     },
     "./web": {
       "import": "./dist/web/tedir-calendar-web.es.js",

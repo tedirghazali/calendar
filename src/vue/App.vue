@@ -7,7 +7,7 @@ import EventCalendar from './components/EventCalendar.vue'
 <template>
   <div class="container my-5rem">
     <h2>Date Picker</h2>
-    <DatePicker />
+    <DatePicker mode="date" />
     <p><br/></p>
     <h2>Basic Calendar</h2>
     <CalendarBox />

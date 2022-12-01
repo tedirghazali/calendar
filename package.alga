@@ -1,5 +1,5 @@
-@import './src/alga/calendarLayout.alga';
+@import './src/alga/tedirLayoutCalendar.alga';
 @import './src/alga/tedirCalendar.alga';
 @import './src/alga/tedirDatePicker.alga';
 
-@export calendarLayout, tedirCalendar, tedirDatePicker;
+@export tedirLayoutCalendar, tedirCalendar, tedirDatePicker;

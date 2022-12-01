@@ -3,78 +3,101 @@
 }
 
 @alga {refs.name} {
-  .dayGrid {
-    ref: display-grid width-330px;
-    ref-gridTemplateColumns: repeat(7, 1fr);
-    ref-borderTop: 1px solid rgba(0, 0, 0, 0.15);
-    ref-borderRight: 1px solid rgba(0, 0, 0, 0.15);
-  }
+  .{refs.name} {
+    .dayGrid {
+      ref: display-grid width-330px;
+      ref-gridTemplateColumns: repeat(7, 1fr);
+      ref-borderTop: 1px solid #d9d9d9;
+      ref-borderRight: 1px solid #d9d9d9;
+      prefers-dark: borderTopColor-hex4f4f4f borderRightColor-hex4f4f4f;
+      prefers-toDark: borderTopColor-hex4f4f4f borderRightColor-hex4f4f4f;
+      prefers-toLight: borderTopColor-hexd9d9d9 borderRightColor-hexd9d9d9;
+    }
 
-  .dayItem {
-    ref: textAlign-center;
-    ref-borderLeft: 1px solid rgba(0, 0, 0, 0.15);
-    ref-padding: 0.5rem 0;
-  }
+    .dayItem {
+      ref: textAlign-center;
+      ref-padding: 0.5rem 0;
+      ref-borderLeft: 1px solid #d9d9d9;
+      prefers-dark: borderLeftColor-hex4f4f4f;
+      prefers-toDark: borderLeftColor-hex4f4f4f;
+      prefers-toLight: borderLeftColor-hexd9d9d9;
+    }
 
-  .weekWrap {
-    ref: height-100pct;
-  }
+    .weekWrap {
+      ref: height-100pct;
+    }
 
-  .weekDay {
-    ref: textAlign-center width-45px;
-    ref-borderTop: 1px solid rgba(0, 0, 0, 0.15);
-    ref-borderLeft: 1px solid rgba(0, 0, 0, 0.15);
-    ref-padding: 0.5rem 0;
-  }
+    .weekDay {
+      ref: textAlign-center width-45px;
+      ref-padding: 0.5rem 0;
+      ref-borderTop: 1px solid #d9d9d9;
+      ref-borderLeft: 1px solid #d9d9d9;
+      prefers-dark: borderTopColor-hex4f4f4f borderLeftColor-hex4f4f4f;
+      prefers-toDark: borderTopColor-hex4f4f4f borderLeftColor-hex4f4f4f;
+      prefers-toLight: borderTopColor-hexd9d9d9 borderLeftColor-hexd9d9d9;
+    }
 
-  .weekGrid {
-    ref: display-grid;
-    ref-gridTemplateColumns: repeat(1, 1fr);
-    ref-borderLeft: 1px solid rgba(0, 0, 0, 0.15);
-    ref-borderBottom: 1px solid rgba(0, 0, 0, 0.15);
-  }
+    .weekGrid {
+      ref: display-grid;
+      ref-gridTemplateColumns: repeat(1, 1fr);
+      ref-borderBottom: 1px solid #d9d9d9;
+      ref-borderLeft: 1px solid #d9d9d9;
+      prefers-dark: borderBottomColor-hex4f4f4f borderLeftColor-hex4f4f4f;
+      prefers-toDark: borderBottomColor-hex4f4f4f borderLeftColor-hex4f4f4f;
+      prefers-toLight: borderBottomColor-hexd9d9d9 borderLeftColor-hexd9d9d9;
+    }
 
-  .weekItem {
-    ref: display-flex flexDirection-column justifyContent-center alignItems-center width-45px;
-    ref-borderTop: 1px solid rgba(0, 0, 0, 0.15);
-    ref-padding: 0.5rem 0;
-  }
+    .weekItem {
+      ref: display-flex flexDirection-column justifyContent-center alignItems-center width-45px;
+      ref-padding: 0.5rem 0;
+      ref-borderTop: 1px solid #d9d9d9;
+      prefers-dark: borderTopColor-hex4f4f4f;
+      prefers-toDark: borderTopColor-hex4f4f4f;
+      prefers-toLight: borderTopColor-hexd9d9d9;
+    }
 
-  .monthGrid {
-    ref: display-grid width-330px;
-    ref-gridTemplateColumns: repeat(7, 1fr);
-    ref-borderTop: 1px solid rgba(0, 0, 0, 0.15);
-    ref-borderRight: 1px solid rgba(0, 0, 0, 0.15);
-  }
+    .monthGrid {
+      ref: display-grid width-330px;
+      ref-gridTemplateColumns: repeat(7, 1fr);
+      ref-borderTop: 1px solid #d9d9d9;
+      ref-borderRight: 1px solid #d9d9d9;
+      prefers-dark: borderTopColor-hex4f4f4f borderRightColor-hex4f4f4f;
+      prefers-toDark: borderTopColor-hex4f4f4f borderRightColor-hex4f4f4f;
+      prefers-toLight: borderTopColor-hexd9d9d9 borderRightColor-hexd9d9d9;
+    }
 
-  .monthItem {
-    ref: display-flex flexDirection-column justifyContent-center alignItems-center cursor-default;
-    ref-borderBottom: 1px solid rgba(0, 0, 0, 0.15);
-    ref-borderLeft: 1px solid rgba(0, 0, 0, 0.15);
-    ref-padding: 0.5rem 0;
-  }
+    .monthItem {
+      ref: display-flex flexDirection-column justifyContent-center alignItems-center cursor-default;
+      ref-padding: 0.5rem 0;
+      ref-borderBottom: 1px solid #d9d9d9;
+      ref-borderLeft: 1px solid #d9d9d9;
+      prefers-dark: borderBottomColor-hex4f4f4f borderLeftColor-hex4f4f4f;
+      prefers-toDark: borderBottomColor-hex4f4f4f borderLeftColor-hex4f4f4f;
+      prefers-toLight: borderBottomColor-hexd9d9d9 borderLeftColor-hexd9d9d9;
+    }
 
-  .readOnlyItem {
-    ref: color-hex8e9ba8;
+    .readOnlyItem {
+      ref: color-hex8e9ba8;
+    }
+    
+    .current {
+      ref: backgroundColor-hex8e9ba8 borderColor-hex8e9ba8 color-hexfff;
+    }
+
+    .active {
+      ref: backgroundColor-hex0080ff borderColor-hex0080ff color-hexfff;
+    }
+
+    .monthHeader {
+      ref: textAlign-right;
+    }
+
+    .monthBody {
+      ref: flexGrow-1;
+    }
   }
   
-  .current {
-    ref: backgroundColor-hex8e9ba8 borderColor-hex8e9ba8 color-hexfff;
-  }
-
-  .active {
-    ref: backgroundColor-hex0080ff borderColor-hex0080ff color-hexfff;
-  }
-
-  .monthHeader {
-    ref: textAlign-right;
-  }
-
-  .monthBody {
-    ref: flexGrow-1;
-  }
-  
-  .calendarSmall {
+  .{refs.name}Small {
     .dayGrid,
     .monthGrid {
       ref: width-280px;
