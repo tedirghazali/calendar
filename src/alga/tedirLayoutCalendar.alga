@@ -8,6 +8,11 @@
     ref-fontFamily: Arial, sans-serif;
   }
   
+  .calendar:not(.hasWeek) {
+    ref-gridTemplateAreas: "dayGrid" "monthGrid" "monthGrid";
+    ref-gridTemplateColumns: 1fr;
+  }
+
   .calendar.hasWeek {
     ref-gridTemplateAreas: "weekGrid dayGrid" "weekGrid monthGrid" "weekGrid monthGrid";
     ref-gridTemplateColumns: auto 1fr;

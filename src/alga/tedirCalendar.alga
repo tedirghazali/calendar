@@ -77,12 +77,12 @@
   .calendarSmall {
     .dayGrid,
     .monthGrid {
-      ref: width-250px;
+      ref: width-280px;
     }
     
     .weekDay,
     .weekItem {
-      ref: width-35px;
+      ref: width-38px;
     }
   }
 }

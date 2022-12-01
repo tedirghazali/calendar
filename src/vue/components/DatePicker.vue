@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import { years, months } from 'alga-js/date'
 import CalendarBox from './CalendarBox.vue'
 
 interface Props {
@@ -8,7 +9,8 @@ interface Props {
   options?: any[],
   prop?: string,
   placeholder?: string,
-  size?: number
+  size?: number,
+  locale?: string
 }
 
 interface Emits {
@@ -22,21 +24,22 @@ const props = withDefaults(defineProps<Props>(), {
   options: [],
   prop: 'value',
   placeholder: '',
-  size: 0
+  size: 0,
+  locale: 'id-ID'
 })
 
 const emit = defineEmits<Emits>()
 
-const selected = ref<Date>(new Date(props?.modelValue || undefined))
-const year = ref<number>(new Date(props?.modelValue || undefined).getFullYear())
-const month = ref<number>(Number(new Date(props?.modelValue || undefined).getMonth()) + 1)
+const selected = ref<Date>(new Date(props?.modelValue || null))
+const year = ref<number>(new Date(props?.modelValue || null).getFullYear())
+const month = ref<number>(Number(new Date(props?.modelValue || null).getMonth()) + 1)
 const picker = ref<boolean>(false)
 const searchStr = ref<string>('')
 
 watch(() => props.modelValue, () => {
-  selected.value = new Date(props?.modelValue || undefined)
-  year.value = new Date(props?.modelValue || undefined).getFullYear()
-  month.value = Number(new Date(props?.modelValue || undefined).getMonth()) + 1
+  selected.value = new Date(props?.modelValue || null)
+  year.value = new Date(props?.modelValue || null).getFullYear()
+  month.value = Number(new Date(props?.modelValue || null).getMonth()) + 1
 })
 
 const randomChar = (maxlength: number = 10) => {
@@ -57,29 +60,57 @@ const pickedHandler = (val: any) => {
   emit('handler', val)
   picker.value = false
 }
+
+const allYears = computed(() => {
+  return years(year.value, 4)
+})
+
+const allMonths = computed(() => {
+  return months()
+})
+
+const monthControlHandler = (btnControl: string) => {
+  let monthNum = 1
+  if(btnControl === 'prev') {
+    if(month.value > 1 && month.value <= 12) {
+      monthNum = month.value - 1
+    } else if(month.value === 1) {
+      monthNum = 12
+      year.value = year.value - 1
+    }
+  } else if(btnControl === 'next') {
+    if(month.value >= 1 && month.value < 12) {
+      monthNum = month.value + 1
+    } else if(month.value === 12) {
+      monthNum = 1
+      year.value = year.value + 1
+    }
+  }
+  month.value = monthNum
+}
 </script>
 
 <template>
   <div class="picker tedirDatePicker" :class="picker ? 'active' : ''">
     <div class="pickerBackdrop" @click="hideByClick"></div>
     <div class="pickerWrap">
-      <input type="search" v-model="selected" @click="picker = !picker" class="input tedirDateInput" :placeholder="placeholder" />
+      <input type="text" :value="new Date(selected).toLocaleString(props?.locale || 'id-ID')" @click="picker = !picker" class="input tedirDateInput" :placeholder="placeholder" />
       <div class="pickerContent">
         <div class="tedirDateControl">
-          <div class="tedirDateStart">
+          <div class="tedirDateStart" @click="monthControlHandler('prev')">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
             </svg>
           </div>
           <div class="tedirDateCenter">
-            <select class="select tedirDateMonth">
-              <option>Jan</option>
+            <select v-model="month" class="select tedirDateMonth">
+              <option v-for="mnt in allMonths" :key="mnt.value" :value="Number(mnt.value)">{{ mnt.text }}</option>
             </select>
-            <select class="select tedirDateYear">
-              <option>2022</option>
+            <select v-model="year" class="select tedirDateYear">
+              <option v-for="yr in allYears" :key="yr" :value="yr">{{ yr }}</option>
             </select>
           </div>
-          <div class="tedirDateEnd">
+          <div class="tedirDateEnd" @click="monthControlHandler('next')">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
             </svg>

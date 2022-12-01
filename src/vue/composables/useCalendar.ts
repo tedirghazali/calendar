@@ -1,15 +1,17 @@
 import { ref, computed, Ref } from 'vue'
 
-const arg: Ref<T> = (val: T) => {
-  return { value: val }
-}
+const setYearRef = ref<number>(Number(new Date().getFullYear()))
+const setMonthRef = ref<number>(Number(new Date().getMonth()) + 1)
+const setDayRef = ref<number>(Number(new Date().getDate()))
+const setLocaleRef = ref<string>('en-US')
+const setOptionRef = ref<any>({ weekday: 'long' })
 
 export default function useCalendar(
-  getYearRef: Ref<number> = arg<number>(new Date().getFullYear()), 
-  getMonthRef: Ref<number> = arg<number>(Number(new Date().getMonth()) + 1), 
-  getDayRef: Ref<number> = arg<number>(new Date().getDate()), 
-  getLocaleRef: Ref<string> = arg<string>('en-US'), 
-  getOptionRef: Ref<any> = arg<any>({ weekday: 'long' })
+  getYearRef: Ref<number> = setYearRef, 
+  getMonthRef: Ref<number> = setMonthRef, 
+  getDayRef: Ref<number> = setDayRef, 
+  getLocaleRef: Ref<string> = setLocaleRef, 
+  getOptionRef: Ref<any> = setOptionRef
 ) {
   
   const days = computed<string[]>(() => {
@@ -27,7 +29,7 @@ export default function useCalendar(
     return commonDays.includes(numOfDays) ? numOfDays : 31
   })
   
-  const daysInPrevMonth = computed<number>(() => {
+  const daysInPrevMonth = computed<number[]>(() => {
     const prevDays = []
     const getDay = new Date(getYearRef.value, Number(getMonthRef.value) - 1, 1).getDay()
     for(let i = Number(getDay) - 1; i >= 0; i--) {

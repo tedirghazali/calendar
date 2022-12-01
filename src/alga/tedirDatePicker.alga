@@ -16,6 +16,11 @@
     .tedirDateControl {
       ref: display-flex alignItems-center padding-0.75rem;
       
+      .tedirDateStart svg,
+      .tedirDateEnd svg {
+        ref: pointerEvents-none;
+      }
+      
       .tedirDateCenter {
         ref: flexGrow-1 display-flex justifyContent-center;
         

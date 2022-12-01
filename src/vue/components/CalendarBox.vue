@@ -3,13 +3,13 @@ import { ref, watch } from 'vue'
 import useCalendar from '../composables/useCalendar'
 
 interface Props {
-  modelValue?: Date,
+  modelValue?: any,
   year?: number,
   month?: number,
   locale?: string,
   type?: string,
   size?: string,
-  
+  week?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -18,11 +18,12 @@ const props = withDefaults(defineProps<Props>(), {
   month: Number(new Date().getMonth()) + 1,
   locale: 'en-US',
   type: 'narrow',
-  size: 'medium'
+  size: 'medium',
+  week: false
 })
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: Date): void,
+  (e: 'update:modelValue', value: any): void,
   (e: 'handler', value: any[] | any): void
 }>()
 
@@ -33,9 +34,17 @@ const locale = ref<string>(props.locale || 'en-US')
 const daytype = ref<any>({ weekday: props.type || 'narrow' })
 
 watch(() => props.modelValue, () => {
-  year.value = props.modelValue?.getFullYear() || new Date().getFullYear()
-  month.value = props.modelValue?.getMonth() || new Date().getMonth()
+  year.value = props?.year || new Date(props?.modelValue || null).getFullYear()
+  month.value = props?.month || Number(new Date(props?.modelValue || null).getMonth()) + 1
   date.value = props.modelValue?.getDate() || new Date().getDate()
+})
+
+watch(() => props.year, () => {
+  year.value = props.year
+})
+
+watch(() => props.month, () => {
+  month.value = props.month
 })
 
 const { days, daysInMonth, daysInPrevMonth, daysInNextMonth } = useCalendar(year, month, date, locale, daytype)
@@ -47,16 +56,36 @@ const splitDate = (dateArg: string) => {
 const weeks = ['1', '2', '3', '4', '5', '6']
 const count = ref(0)
 
-const selectDate = (yr, mn, dy) => {
+const selectDate = (yr: number, mn: number, dy: number) => {
   date.value = dy
-  const newDate = new Date(yr, mn, dy)
+  const newDate: any = new Date(yr, Number(mn) - 1, dy)
   emit('update:modelValue', newDate)
   emit('handler', newDate)
+}
+
+const activeHandler = (dy: number) => {
+  let newActive = false
+  const newYear: number = new Date(props?.modelValue || null).getFullYear()
+  const newMonth: number = Number(new Date(props?.modelValue || null).getMonth()) + 1
+  if(Number(newYear) === Number(year.value) && Number(newMonth) === Number(month.value) && Number(date.value) === Number(dy)) {
+    newActive = true
+  }
+  return newActive
+}
+
+const currentHandler = (dy: number) => {
+  let newActive = false
+  const newYear: number = new Date().getFullYear()
+  const newMonth: number = Number(new Date().getMonth()) + 1
+  if(Number(newYear) === Number(year.value) && Number(newMonth) === Number(month.value) && Number(new Date().getDate()) === Number(dy)) {
+    newActive = true
+  }
+  return newActive
 }
 </script>
 
 <template>
-  <div class="calendar hasWeek" :class="{'calendarSmall': props?.size === 'small'}">
+  <div class="calendar" :class="{hasWeek: props?.week, calendarSmall: props?.size === 'small'}">
     <div class="calendarDay">
       <div class="dayGrid">
         <div v-for="day in days" class="dayItem">
@@ -70,7 +99,7 @@ const selectDate = (yr, mn, dy) => {
           <div class="monthHeader">{{ prevNum }}</div>
           <div class="monthBody"></div>
         </div>
-        <div v-for="dayNum in daysInMonth" :key="dayNum" class="monthItem" :class="{active: date === dayNum, current: Number(new Date().getDate()) === dayNum}" @click.stop="selectDate(year, month, dayNum)">
+        <div v-for="dayNum in daysInMonth" :key="dayNum" class="monthItem" :class="{active: activeHandler(dayNum), current: currentHandler(dayNum)}" @click.stop="selectDate(year, month, dayNum)">
           <div class="monthHeader">{{ dayNum }}</div>
           <div class="monthBody"></div>
         </div>
@@ -80,7 +109,7 @@ const selectDate = (yr, mn, dy) => {
         </div>
       </div>
     </div>
-    <div class="calendarWeek">
+    <div class="calendarWeek" v-if="props?.week">
       <div class="weekWrap">
         <div class="weekDay readOnlyItem">W</div>
         <div class="weekGrid">
