@@ -6,7 +6,6 @@ import CalendarBox from './CalendarBox.vue'
 interface Props {
   modelValue?: any,
   placeholder?: string,
-  mode?: string,
   locale?: string,
   option?: any,
 }
@@ -19,7 +18,6 @@ interface Emits {
 const props = withDefaults(defineProps<Props>(), {
   modelValue: new Date(),
   placeholder: '',
-  mode: 'dataTime',
   locale: 'id-ID',
   option: {}
 })
@@ -86,13 +84,7 @@ const monthControlHandler = (btnControl: string) => {
 }
 
 const dateInputValue = computed<any>(() => {
-  let newInputValue = new Date(selected.value).toLocaleString(props?.locale || 'id-ID', props?.option || {})
-  if(props?.mode && props.mode === 'date') {
-    newInputValue = new Date(selected.value).toLocaleDateString(props?.locale || 'id-ID', props?.option || {})
-  } else if(props?.mode && props.mode === 'time') {
-    newInputValue = new Date(selected.value).toLocaleTimeString(props?.locale || 'id-ID', props?.option || {})
-  }
-  return newInputValue
+  return new Date(selected.value).toLocaleDateString(props?.locale || 'id-ID', props?.option || {})
 })
 </script>
 
