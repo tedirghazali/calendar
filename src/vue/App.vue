@@ -11,7 +11,7 @@ import EventCalendar from './components/EventCalendar.vue'
     <DatePicker />
     <p><br/></p>
     <h2>Time Picker</h2>
-    <TimePicker timeType="12h" />
+    <TimePicker timeType="24h" />
     <p><br/></p>
     <h2>Basic Calendar</h2>
     <CalendarBox />

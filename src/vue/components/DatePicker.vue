@@ -92,7 +92,7 @@ const dateInputValue = computed<any>(() => {
   <div class="picker tedirDatePicker" :class="picker ? 'active' : ''">
     <div class="pickerBackdrop" @click="hideByClick"></div>
     <div class="pickerWrap">
-      <input type="text" :value="dateInputValue" @click="picker = !picker" class="input tedirDateInput" :placeholder="placeholder" />
+      <input type="text" :value="dateInputValue" @click="picker = !picker" class="input tedirDateInput" :placeholder="placeholder" readonly />
       <div class="pickerContent">
         <div class="tedirDateControl">
           <div class="tedirDateStart" @click="monthControlHandler('prev')">

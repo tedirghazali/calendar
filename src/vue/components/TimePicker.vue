@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { years, months } from 'alga-js/date'
 import CalendarBox from './CalendarBox.vue'
 
 interface Props {
-  modelValue?: any,
+  modelValue?: string,
   placeholder?: string,
   timeType?: string,
   locale?: string,
@@ -12,77 +11,83 @@ interface Props {
 }
 
 interface Emits {
-  (e: 'update:modelValue', value: any[] | any): void,
-  (e: 'handler', value: any[] | any): void
+  (e: 'update:modelValue', value: string): void,
+  (e: 'handler', value: string): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: new Date(),
+  modelValue: new Date().toLocaleTimeString('en-GB'),
   placeholder: '',
-  timeType: '24h',
+  timeType: '',
   locale: 'en-GB',
   option: {}
 })
 
 const emit = defineEmits<Emits>()
 
-const selected = ref<Date>(new Date(props?.modelValue || null))
-const year = ref<number>(new Date(props?.modelValue || null).getFullYear())
-const month = ref<number>(Number(new Date(props?.modelValue || null).getMonth()) + 1)
+const year = ref<number>(new Date().getFullYear())
+const monthIndex = ref<number>(new Date().getMonth())
+const day = ref<number>(new Date().getDay())
+const hour = ref<number>(Number(props?.modelValue.split(':')?.[0] || new Date().getHours()))
+const minute = ref<number>(Number(props?.modelValue.split(':')?.[1] || new Date().getMinutes()))
+const second = ref<number>(0)
+if(props.timeType !== '12h' && props.timeType !== '24h') {
+  second.value = Number(props?.modelValue.split(':')?.[2] || new Date().getSeconds())
+}
+const selected = ref<Date>(new Date(year.value, monthIndex.value, day.value, Number(hour.value), Number(minute.value), Number(second.value)))
 const picker = ref<boolean>(false)
-const searchStr = ref<string>('')
+
+const changeTime = () => {
+  selected.value = new Date(year.value, monthIndex.value, day.value, Number(hour.value), Number(minute.value), Number(second.value))
+}
 
 watch(() => props.modelValue, () => {
-  selected.value = new Date(props?.modelValue || null)
-  year.value = new Date(props?.modelValue || null).getFullYear()
-  month.value = Number(new Date(props?.modelValue || null).getMonth()) + 1
-})
-
-const randomChar = (maxlength: number = 10) => {
-  let allChar: string = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-  let resChar: string = ''
-  for(let i: number = 0; i < maxlength; i++) {
-    resChar += allChar.charAt(Math.floor(Math.random() * allChar.length))
+  hour.value = Number(props.modelValue.split(':')?.[0] || new Date().getHours())
+  minute.value = Number(props.modelValue.split(':')?.[1] || new Date().getMinutes())
+  if(props.timeType !== '12h' && props.timeType !== '24h') {
+    second.value = Number(props?.modelValue.split(':')?.[2] || new Date().getSeconds())
   }
-  return resChar
-}
-
-const hideByClick = () => {
-  picker.value = false
-}
-
-const pickedHandler = (val: any) => {
-  emit('update:modelValue', selected.value)
-  emit('handler', val)
-  picker.value = false
-}
-
-const allYears = computed(() => {
-  return years(year.value, 4)
+  selected.value = new Date(year.value, monthIndex.value, day.value, Number(hour.value), Number(minute.value), Number(second.value))
 })
+watch(hour, changeTime)
+watch(minute, changeTime)
+watch(second, changeTime)
 
-const allMonths = computed(() => {
-  return months()
-})
-
-const monthControlHandler = (btnControl: string) => {
-  let monthNum = 1
-  if(btnControl === 'prev') {
-    if(month.value > 1 && month.value <= 12) {
-      monthNum = month.value - 1
-    } else if(month.value === 1) {
-      monthNum = 12
-      year.value = year.value - 1
-    }
-  } else if(btnControl === 'next') {
-    if(month.value >= 1 && month.value < 12) {
-      monthNum = month.value + 1
-    } else if(month.value === 12) {
-      monthNum = 1
-      year.value = year.value + 1
-    }
+const addTimeHandler = (fromUnit: string) => {
+  let newVal = 1000
+  if(fromUnit === 'h') {
+    newVal = 1000 * 3600
+  } else if(fromUnit === 'm') {
+    newVal = 1000 * 60
   }
-  month.value = monthNum
+  
+  const newDate = new Date(year.value, monthIndex.value, day.value, Number(hour.value), Number(minute.value), Number(second.value))
+  newDate.setMilliseconds(Number(newVal))
+  hour.value = newDate.getHours()
+  minute.value = newDate.getMinutes()
+  if(props.timeType !== '12h' && props.timeType !== '24h') {
+    second.value = newDate.getSeconds()
+  }
+  selected.value = newDate
+  console.log(minute.value)
+}
+
+const subTimeHandler = (fromUnit: string) => {
+  let newVal = 1000
+  if(fromUnit === 'h') {
+    newVal = 1000 * 3600
+  } else if(fromUnit === 'm') {
+    newVal = 1000 * 60
+  }
+  
+  const newDate = new Date(year.value, monthIndex.value, day.value, Number(hour.value), Number(minute.value), Number(second.value))
+  newDate.setMilliseconds(Number('-'+newVal))
+  hour.value = newDate.getHours()
+  minute.value = newDate.getMinutes()
+  if(props.timeType !== '12h' && props.timeType !== '24h') {
+    second.value = newDate.getSeconds()
+  }
+  selected.value = newDate
 }
 
 const timeInputValue = computed<any>(() => {
@@ -91,8 +96,7 @@ const timeInputValue = computed<any>(() => {
     newOption = Object.assign({}, newOption, {
       hour12: false, 
       hour: '2-digit', 
-      minute: '2-digit', 
-      second: '2-digit'
+      minute: '2-digit'
     })
   } else if(props.timeType === '12h') {
     newOption = Object.assign({}, newOption, {
@@ -100,9 +104,22 @@ const timeInputValue = computed<any>(() => {
       hour: '2-digit', 
       minute: '2-digit'
     })
+  } else {
+    newOption = Object.assign({}, newOption, {
+      hour12: false, 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit'
+    })
   }
-  return new Date(selected.value).toLocaleTimeString(props?.locale || 'en-GB', props?.option || {})
+  return new Date(selected.value).toLocaleTimeString(props?.locale || 'en-GB', newOption)
 })
+
+const pickedHandler = (val: boolean) => {
+  emit('update:modelValue', timeInputValue.value)
+  emit('handler', timeInputValue.value)
+  picker.value = val
+}
 
 const timePlusIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
   <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
@@ -114,29 +131,29 @@ const timeMinusIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height
 
 <template>
   <div class="picker tedirDatePicker tedirTimePicker" :class="picker ? 'active' : ''">
-    <div class="pickerBackdrop" @click="hideByClick"></div>
+    <div class="pickerBackdrop" @click="pickedHandler(false)"></div>
     <div class="pickerWrap">
-      <input type="text" :value="timeInputValue" @click="picker = !picker" class="input tedirDateInput" :placeholder="placeholder" />
-      <div class="pickerContent">
+      <input type="text" :value="timeInputValue" @click="pickedHandler(!picker)" class="input tedirDateInput" :placeholder="placeholder" readonly />
+      <div class="pickerContent" :style="(timeType === '12h' || timeType === '24h') ? 'min-width: 0px;' : ''">
         <div class="tedirTimeGroup">
           <div class="group groupList">
-            <button type="button" class="button groupItem" v-html="timePlusIcon"></button>
-            <input type="text" class="input groupItem tedirTimeInput" maxlength="2" />
-            <button type="button" class="button groupItem" v-html="timeMinusIcon"></button>
+            <button type="button" class="button groupItem" v-html="timePlusIcon" @click="addTimeHandler('h')"></button>
+            <input type="text" v-model="hour" class="input groupItem tedirTimeInput" maxlength="2" />
+            <button type="button" class="button groupItem" v-html="timeMinusIcon" @click="subTimeHandler('h')"></button>
           </div>
           <div class="group groupList">
-            <button type="button" class="button groupItem" v-html="timePlusIcon"></button>
-            <input type="text" class="input groupItem tedirTimeInput" maxlength="2" />
-            <button type="button" class="button groupItem" v-html="timeMinusIcon"></button>
+            <button type="button" class="button groupItem" v-html="timePlusIcon" @click="addTimeHandler('m')"></button>
+            <input type="text" v-model="minute" class="input groupItem tedirTimeInput" maxlength="2" />
+            <button type="button" class="button groupItem" v-html="timeMinusIcon" @click="subTimeHandler('m')"></button>
           </div>
-          <div v-if="props.timeType === '12h'" class="group groupList">
+          <div v-if="timeType === '12h'" class="group groupList">
             <button type="button" class="button groupItem">AM</button>
             <button type="button" class="button groupItem">PM</button>
           </div>
-          <div v-else class="group groupList">
-            <button type="button" class="button groupItem" v-html="timePlusIcon"></button>
-            <input type="text" class="input groupItem tedirTimeInput" maxlength="2" />
-            <button type="button" class="button groupItem" v-html="timeMinusIcon"></button>
+          <div v-else-if="timeType !== '24h'" class="group groupList">
+            <button type="button" class="button groupItem" v-html="timePlusIcon" @click="addTimeHandler('s')"></button>
+            <input type="text" v-model="second" class="input groupItem tedirTimeInput" maxlength="2" />
+            <button type="button" class="button groupItem" v-html="timeMinusIcon" @click="subTimeHandler('s')"></button>
           </div>
         </div>
       </div>
