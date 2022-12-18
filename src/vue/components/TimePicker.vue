@@ -8,6 +8,7 @@ interface Props {
   timeType?: string,
   locale?: string,
   option?: any,
+  up?: boolean
 }
 
 interface Emits {
@@ -20,7 +21,8 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: '',
   timeType: '',
   locale: 'en-GB',
-  option: {}
+  option: {},
+  up: false
 })
 
 const emit = defineEmits<Emits>()
@@ -69,7 +71,8 @@ const addTimeHandler = (fromUnit: string) => {
     second.value = newDate.getSeconds()
   }
   selected.value = newDate
-  console.log(minute.value)
+  emit('update:modelValue', timeInputValue.value)
+  emit('handler', timeInputValue.value)
 }
 
 const subTimeHandler = (fromUnit: string) => {
@@ -88,6 +91,8 @@ const subTimeHandler = (fromUnit: string) => {
     second.value = newDate.getSeconds()
   }
   selected.value = newDate
+  emit('update:modelValue', timeInputValue.value)
+  emit('handler', timeInputValue.value)
 }
 
 const timeInputValue = computed<any>(() => {
@@ -130,7 +135,7 @@ const timeMinusIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height
 </script>
 
 <template>
-  <div class="picker tedirDatePicker tedirTimePicker" :class="picker ? 'active' : ''">
+  <div class="picker tedirDatePicker tedirTimePicker" :class="{active : picker, pickerUp: up}">
     <div class="pickerBackdrop" @click="pickedHandler(false)"></div>
     <div class="pickerWrap">
       <input type="text" :value="timeInputValue" @click="pickedHandler(!picker)" class="input tedirDateInput" :placeholder="placeholder" readonly />

@@ -1,6 +1,6 @@
 {
   "name": "tedir-calendar",
-  "version": "0.0.1-wood-3",
+  "version": "0.0.1-wood-4",
   "description": "Tedir Calendar is a Vue 3 & Web Component Event Calendar",
   "main": "dist/vue/tedir-calendar-vue.umd.js",
   "module": "dist/vue/tedir-calendar-vue.es.js",
@@ -50,7 +50,7 @@
   "devDependencies": {
     "@babel/types": "^7.20.5",
     "@vitejs/plugin-vue": "^3.2.0",
-    "alga-css": "^1.0.0-emerald-5",
+    "alga-css": "^1.0.0-emerald-8",
     "alga-js": "^0.1.0-iron-4",
     "typescript": "^4.6.4",
     "vite": "^3.2.4",

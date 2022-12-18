@@ -9,7 +9,9 @@ interface Props {
   locale?: string,
   type?: string,
   size?: string,
-  week?: boolean
+  week?: boolean,
+  min?: any,
+  max?: any
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -19,7 +21,9 @@ const props = withDefaults(defineProps<Props>(), {
   locale: 'en-US',
   type: 'narrow',
   size: 'medium',
-  week: false
+  week: false,
+  min: null,
+  max: null
 })
 
 const emit = defineEmits<{
@@ -82,6 +86,25 @@ const currentHandler = (dy: number) => {
   }
   return newActive
 }
+
+const minMaxHandler = (dy: number) => {
+  let newActive = false
+  if(props.min !== null && new Date(props.min).valueOf() < new Date().valueOf()) {
+    const newYear: number = new Date(props.min).getFullYear()
+    const newMonth: number = Number(new Date(props.min).getMonth()) + 1
+    if(Number(newYear) === Number(year.value) && Number(newMonth) === Number(month.value) && Number(dy) <= Number(new Date(props.min).getDate())) {
+      newActive = true
+    }
+  }
+  if(props.max !== null && new Date(props.max).valueOf() > new Date().valueOf()) {
+    const newYear: number = new Date(props.max).getFullYear()
+    const newMonth: number = Number(new Date(props.max).getMonth()) + 1
+    if(Number(newYear) === Number(year.value) && Number(newMonth) === Number(month.value) && Number(dy) >= Number(new Date(props.max).getDate())) {
+      newActive = true
+    }
+  }
+  return newActive
+}
 </script>
 
 <template>
@@ -99,7 +122,7 @@ const currentHandler = (dy: number) => {
           <div class="monthHeader">{{ prevNum }}</div>
           <div class="monthBody"></div>
         </div>
-        <div v-for="dayNum in daysInMonth" :key="dayNum" class="monthItem" :class="{active: activeHandler(dayNum), current: currentHandler(dayNum)}" @click.stop="selectDate(year, month, dayNum)">
+        <div v-for="dayNum in daysInMonth" :key="dayNum" class="monthItem" :class="{active: activeHandler(dayNum), current: currentHandler(dayNum), readOnlyItem: minMaxHandler(dayNum)}" @click.stop="selectDate(year, month, dayNum)">
           <div class="monthHeader">{{ dayNum }}</div>
           <div class="monthBody"></div>
         </div>

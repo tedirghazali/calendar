@@ -8,18 +8,26 @@ interface Props {
   placeholder?: string,
   locale?: string,
   option?: any,
+  min?: any,
+  max?: any,
+  add?: number,
+  up?: boolean
 }
 
 interface Emits {
-  (e: 'update:modelValue', value: any[] | any): void,
-  (e: 'handler', value: any[] | any): void
+  (e: 'update:modelValue', value: string): void,
+  (e: 'handler', value: string): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: new Date(),
   placeholder: '',
   locale: 'id-ID',
-  option: {}
+  option: {},
+  min: null,
+  max: null,
+  add: 0,
+  up: false
 })
 
 const emit = defineEmits<Emits>()
@@ -30,11 +38,23 @@ const month = ref<number>(Number(new Date(props?.modelValue || null).getMonth())
 const picker = ref<boolean>(false)
 const searchStr = ref<string>('')
 
-watch(() => props.modelValue, () => {
-  selected.value = new Date(props?.modelValue || null)
-  year.value = new Date(props?.modelValue || null).getFullYear()
-  month.value = Number(new Date(props?.modelValue || null).getMonth()) + 1
-})
+const changeDateFunc = () => {
+  const newSelectedDate = new Date(props?.modelValue || null)
+  if(props?.add) {
+    newSelectedDate.setDate(Number(newSelectedDate.getDate()) + Number(props.add))
+  }
+  
+  selected.value = newSelectedDate
+  year.value = newSelectedDate.getFullYear()
+  month.value = Number(newSelectedDate.getMonth()) + 1
+}
+
+watch(() => props.modelValue, changeDateFunc)
+
+if(props?.add) {
+  changeDateFunc()
+}
+watch(() => props?.add, changeDateFunc)
 
 const randomChar = (maxlength: number = 10) => {
   let allChar: string = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -50,8 +70,10 @@ const hideByClick = () => {
 }
 
 const pickedHandler = (val: any) => {
-  emit('update:modelValue', selected.value)
-  emit('handler', val)
+  const newSelectedDate = new Date(selected.value || null)
+  
+  emit('update:modelValue', newSelectedDate.toLocaleDateString('en-CA'))
+  emit('handler', newSelectedDate.toLocaleDateString('en-CA'))
   picker.value = false
 }
 
@@ -84,12 +106,14 @@ const monthControlHandler = (btnControl: string) => {
 }
 
 const dateInputValue = computed<any>(() => {
-  return new Date(selected.value).toLocaleDateString(props?.locale || 'id-ID', props?.option || {})
+  const newSelectedDate = new Date(selected.value || null)
+  
+  return newSelectedDate.toLocaleDateString(props?.locale || 'id-ID', props?.option || {})
 })
 </script>
 
 <template>
-  <div class="picker tedirDatePicker" :class="picker ? 'active' : ''">
+  <div class="picker tedirDatePicker" :class="{active : picker, pickerUp: up}">
     <div class="pickerBackdrop" @click="hideByClick"></div>
     <div class="pickerWrap">
       <input type="text" :value="dateInputValue" @click="picker = !picker" class="input tedirDateInput" :placeholder="placeholder" readonly />
@@ -114,7 +138,7 @@ const dateInputValue = computed<any>(() => {
             </svg>
           </div>
         </div>
-        <CalendarBox v-model="selected" class="tedirDateCalendar" size="small" :year="year" :month="month" @handler="pickedHandler" />
+        <CalendarBox v-model="selected" class="tedirDateCalendar" size="small" :year="year" :month="month" :min="min" :max="max" @handler="pickedHandler" />
       </div>
     </div>
   </div>

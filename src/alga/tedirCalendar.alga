@@ -77,7 +77,7 @@
     }
 
     .readOnlyItem {
-      ref: color-hex8e9ba8;
+      ref: color-hex8e9ba8 pointerEvents-none userSelect-none;
     }
     
     .current {
