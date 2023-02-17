@@ -70,10 +70,10 @@ const hideByClick = () => {
 }
 
 const pickedHandler = (val: any) => {
-  const newSelectedDate = new Date(selected.value || null)
+  const pickedSelectedDate = new Date(selected.value || null)
   
-  emit('update:modelValue', newSelectedDate.toLocaleDateString('en-CA'))
-  emit('handler', newSelectedDate.toLocaleDateString('en-CA'))
+  emit('update:modelValue', pickedSelectedDate.toLocaleDateString('en-CA'))
+  emit('handler', pickedSelectedDate.toLocaleDateString('en-CA'))
   picker.value = false
 }
 
