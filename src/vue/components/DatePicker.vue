@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { years, months } from 'alga-js/date'
+import { format, years, months } from 'alga-js/date'
 import CalendarBox from './CalendarBox.vue'
 
 interface Props {
@@ -22,7 +22,7 @@ interface Emits {
 const props = withDefaults(defineProps<Props>(), {
   modelValue: new Date(),
   placeholder: '',
-  locale: 'id-ID',
+  locale: '',
   option: {},
   min: null,
   max: null,
@@ -72,8 +72,8 @@ const hideByClick = () => {
 const pickedHandler = (val: any) => {
   const pickedSelectedDate = new Date(selected.value || null)
   
-  emit('update:modelValue', pickedSelectedDate.toLocaleDateString('en-CA'))
-  emit('handler', pickedSelectedDate.toLocaleDateString('en-CA'))
+  emit('update:modelValue', format(pickedSelectedDate, 'date'))
+  emit('handler', format(pickedSelectedDate, 'date'))
   picker.value = false
 }
 
@@ -108,7 +108,7 @@ const monthControlHandler = (btnControl: string) => {
 const dateInputValue = computed<any>(() => {
   const newSelectedDate = new Date(selected.value || null)
   
-  return newSelectedDate.toLocaleDateString(props?.locale || 'id-ID', props?.option || {})
+  return format(newSelectedDate, 'date', props?.locale || 'en-US', props?.option || {})
 })
 </script>
 
