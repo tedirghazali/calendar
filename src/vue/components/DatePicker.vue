@@ -108,7 +108,7 @@ const monthControlHandler = (btnControl: string) => {
 const dateInputValue = computed<any>(() => {
   const newSelectedDate = new Date(selected.value || null)
   
-  return format(newSelectedDate, 'date', props?.locale || 'en-US', props?.option || {})
+  return format(newSelectedDate, 'date', props?.locale || '', props?.option || {})
 })
 </script>
 
