@@ -78,7 +78,21 @@ const pickedHandler = (val: any) => {
 }
 
 const allYears = computed(() => {
-  return years(year.value, 4)
+  let arrYears = Array.from(years(year.value, 4)).map((item: any, index: number, self: any[]) => {
+    let newItem = {
+      text: item,
+      value: item
+    }
+    if(Number(index) === 0) {
+      newItem.text = 'Prev'
+      newItem.value = item
+    } else if(Number(index) === Number(self.length) - 1) {
+      newItem.text = 'Next'
+      newItem.value = item
+    }
+    return newItem
+  })
+  return arrYears
 })
 
 const allMonths = computed(() => {
@@ -129,7 +143,7 @@ const dateInputValue = computed<any>(() => {
               <option v-for="mnt in allMonths" :key="mnt.value" :value="Number(mnt.value)">{{ mnt.text }}</option>
             </select>
             <select v-model="year" class="select tedirDateYear">
-              <option v-for="yr in allYears" :key="yr" :value="yr">{{ yr }}</option>
+              <option v-for="yr in allYears" :key="yr.value" :value="yr.value">{{ yr.text }}</option>
             </select>
           </div>
           <div class="tedirDateEnd" @click="monthControlHandler('next')">
