@@ -19,17 +19,29 @@
       .tedirDateStart svg,
       .tedirDateEnd svg {
         ref: pointerEvents-none;
+
+        html[dir=rtl] & {
+          ref: transform-rotate(180deg);
+        }
       }
       
       .tedirDateCenter {
-        ref: flexGrow-1 display-flex justifyContent-center;
+        ref: flexGrow-1 display-flex justifyContent-center gap-0.75rem px-0.75rem;
         
         .tedirDateMonth {
-          ref: width-auto marginLeft-0.75rem marginRight-0.75rem paddingRight-2.25rem;
+          ref: width-auto paddingLeft-0.75rem paddingRight-2.25rem;
+
+          html[dir=rtl] & {
+            ref: paddingRight-0.75rem paddingLeft-2.25rem;
+          }
         }
         
         .tedirDateYear {
-          ref: width-auto marginRight-0.75rem paddingRight-2.25rem;
+          ref: width-auto paddingLeft-0.75rem paddingRight-2.25rem;
+
+          html[dir=rtl] & {
+            ref: paddingRight-0.75rem paddingLeft-2.25rem;
+          }
         }
       }
     }
