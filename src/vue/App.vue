@@ -18,7 +18,7 @@ const handler = (val: any) => {
     <div class="d-flex gap-1.5rem">
       <DatePicker :add="2" :up="true" @handler="handler" />
       <DatePicker v-model="startdate" min="2022-12-16" @handler="handler" />
-      <DatePicker max="2022-12-24" @handler="handler" locale="en-US" />
+      <DatePicker max="2023-06-15" @handler="handler" locale="en-US" />
     </div>
     <p><br/></p>
     <h2>Time Picker</h2>

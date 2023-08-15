@@ -135,7 +135,7 @@ const timeMinusIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height
 </script>
 
 <template>
-  <div class="picker tedirDatePicker tedirTimePicker" :class="{active : picker, pickerUp: up}">
+  <div dir="ltr" class="picker tedirDatePicker tedirTimePicker" :class="{active : picker, pickerUp: up}">
     <div class="pickerBackdrop" @click="pickedHandler(false)"></div>
     <div class="pickerWrap">
       <input type="text" :value="timeInputValue" @click="pickedHandler(!picker)" class="input tedirDateInput" :placeholder="placeholder" readonly />

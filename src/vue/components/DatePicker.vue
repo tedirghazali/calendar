@@ -127,7 +127,7 @@ const dateInputValue = computed<any>(() => {
 </script>
 
 <template>
-  <div class="picker tedirDatePicker" :class="{active : picker, pickerUp: up}">
+  <div dir="ltr" class="picker tedirDatePicker" :class="{active : picker, pickerUp: up}">
     <div class="pickerBackdrop" @click="hideByClick"></div>
     <div class="pickerWrap">
       <input type="text" :value="dateInputValue" @click="picker = !picker" class="input tedirDateInput" :placeholder="placeholder" readonly />
