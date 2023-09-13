@@ -29,7 +29,7 @@ const emit = defineEmits<Emits>()
 
 const year = ref<number>(new Date().getFullYear())
 const monthIndex = ref<number>(new Date().getMonth())
-const day = ref<number>(new Date().getDay())
+const day = ref<number>(new Date().getDate())
 const hour = ref<number>(Number(props?.modelValue.split(':')?.[0] || new Date().getHours()))
 const minute = ref<number>(Number(props?.modelValue.split(':')?.[1] || new Date().getMinutes()))
 const second = ref<number>(0)

@@ -2,5 +2,6 @@
 @import './src/alga/tedirCalendar.alga';
 @import './src/alga/tedirDatePicker.alga';
 @import './src/alga/tedirTimePicker.alga';
+@import './src/alga/tedirDateTimePicker.alga';
 
-@export tedirLayoutCalendar, tedirCalendar, tedirDatePicker, tedirTimePicker;
+@export tedirLayoutCalendar, tedirCalendar, tedirDatePicker, tedirTimePicker, tedirDateTimePicker;

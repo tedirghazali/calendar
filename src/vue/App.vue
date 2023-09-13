@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import DatePicker from './components/DatePicker.vue'
 import TimePicker from './components/TimePicker.vue'
+import DateTimePicker from './components/DateTimePicker.vue'
 import CalendarBox from './components/CalendarBox.vue'
 import EventCalendar from './components/EventCalendar.vue'
 
@@ -23,6 +24,9 @@ const handler = (val: any) => {
     <p><br/></p>
     <h2>Time Picker</h2>
     <TimePicker timeType="24h" :up="true" @handler="handler" />
+    <p><br/></p>
+    <h2>Date Time Picker</h2>
+    <DateTimePicker timeType="24h" :up="true" @handler="handler" />
     <p><br/></p>
     <h2>Basic Calendar</h2>
     <CalendarBox />

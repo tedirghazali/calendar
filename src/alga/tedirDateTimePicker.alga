@@ -1,0 +1,25 @@
+@define refs {
+  name: tedirDateTimePicker;
+}
+
+@alga {refs.name} {
+  .{refs.name}.tedirTimeGroup {
+    ref: display-flex padding-0.75rem paddingTop-0px;
+
+    .group {
+      ref: width-125px;
+    }
+      
+    .group:not(:first-child) {
+      ref: marginLeft-0.75rem;
+    }
+      
+    button.groupItem {
+      ref: width-64px display-flex justifyContent-center;
+    }
+      
+    .tedirTimeInput {
+      ref: maxWidth-64px fontSize-0.85rem textAlign-center;
+    }
+  }
+}
