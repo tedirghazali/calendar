@@ -54,9 +54,7 @@ const changeTime = () => {
 
 const changeDateFunc = () => {
   const newSelectedDate = new Date(props?.modelValue || null)
-  if(props?.add) {
-    newSelectedDate.setDate(Number(newSelectedDate.getDate()) + Number(props.add))
-  }
+  
   hour.value = Number(newSelectedDate.getHours())
   minute.value = Number(newSelectedDate.getMinutes())
   if(props.timeType !== '12h' && props.timeType !== '24h') {
@@ -74,10 +72,33 @@ watch(hour, changeTime)
 watch(minute, changeTime)
 watch(second, changeTime)
 
-if(props?.add) {
-  changeDateFunc()
+const addDateFunc = () => {
+  const newSelectedDate = new Date(props?.modelValue || null)
+  if(props?.add) {
+    newSelectedDate.setDate(Number(newSelectedDate.getDate()) + Number(props.add))
+
+    hour.value = Number(newSelectedDate.getHours())
+    minute.value = Number(newSelectedDate.getMinutes())
+    if(props.timeType !== '12h' && props.timeType !== '24h') {
+      second.value = Number(newSelectedDate.getSeconds())
+    }
+    
+    year.value = newSelectedDate.getFullYear()
+    month.value = Number(newSelectedDate.getMonth()) + 1
+    day.value = newSelectedDate.getDate()
+    selected.value = new Date(year.value, (Number(month.value) - 1), day.value, Number(hour.value), Number(minute.value), Number(second.value))
+
+    emit('update:modelValue', format(newSelectedDate, ''))
+    emit('handler', format(newSelectedDate, ''))
+  }
 }
-watch(() => props?.add, changeDateFunc)
+
+if(props?.add) {
+  addDateFunc()
+}
+watch(() => props?.add, () => {
+  addDateFunc()
+})
 
 const randomChar = (maxlength: number = 10) => {
   let allChar: string = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'

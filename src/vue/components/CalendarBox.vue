@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import useCalendar from '../composables/useCalendar'
 
 interface Props {
@@ -87,16 +87,25 @@ const currentHandler = (dy: number) => {
   return newActive
 }
 
+const compareToMin = computed(() => {
+  return props.min !== null ? new Date(props.min).valueOf() : new Date(props.modelValue).valueOf()
+})
+
+const compareToMax = computed(() => {
+  return props.max !== null ? new Date(props.max).valueOf() : new Date(props.modelValue).valueOf()
+})
+
 const minMaxHandler = (dy: number) => {
   let newActive = false
-  if(props.min !== null && new Date(props.min).valueOf() < new Date().valueOf()) {
+
+  if(props.min !== null && new Date(props.min).valueOf() < Number(compareToMax.value)) {
     const newYear: number = new Date(props.min).getFullYear()
     const newMonth: number = Number(new Date(props.min).getMonth()) + 1
     if(Number(newYear) === Number(year.value) && Number(newMonth) === Number(month.value) && Number(dy) <= Number(new Date(props.min).getDate())) {
       newActive = true
     }
   }
-  if(props.max !== null && new Date(props.max).valueOf() > new Date().valueOf()) {
+  if(props.max !== null && new Date(props.max).valueOf() > Number(compareToMin.value)) {
     const newYear: number = new Date(props.max).getFullYear()
     const newMonth: number = Number(new Date(props.max).getMonth()) + 1
     if(Number(newYear) === Number(year.value) && Number(newMonth) === Number(month.value) && Number(dy) >= Number(new Date(props.max).getDate())) {

@@ -40,9 +40,6 @@ const searchStr = ref<string>('')
 
 const changeDateFunc = () => {
   const newSelectedDate = new Date(props?.modelValue || null)
-  if(props?.add) {
-    newSelectedDate.setDate(Number(newSelectedDate.getDate()) + Number(props.add))
-  }
   
   selected.value = newSelectedDate
   year.value = newSelectedDate.getFullYear()
@@ -51,10 +48,27 @@ const changeDateFunc = () => {
 
 watch(() => props.modelValue, changeDateFunc)
 
-if(props?.add) {
-  changeDateFunc()
+const addDateFunc = () => {
+  const newSelectedDate = new Date(props?.modelValue || null)
+  if(props?.add) {
+    newSelectedDate.setDate(Number(newSelectedDate.getDate()) + Number(props.add))
+
+    selected.value = newSelectedDate
+    year.value = newSelectedDate.getFullYear()
+    month.value = Number(newSelectedDate.getMonth()) + 1
+
+    emit('update:modelValue', format(newSelectedDate, 'date'))
+    emit('handler', format(newSelectedDate, 'date'))
+  }
+  
 }
-watch(() => props?.add, changeDateFunc)
+
+if(props?.add) {
+  addDateFunc()
+}
+watch(() => props?.add, () => {
+  addDateFunc()
+})
 
 const randomChar = (maxlength: number = 10) => {
   let allChar: string = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'

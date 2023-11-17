@@ -6,10 +6,12 @@ import DateTimePicker from './components/DateTimePicker.vue'
 import CalendarBox from './components/CalendarBox.vue'
 import EventCalendar from './components/EventCalendar.vue'
 
-const startdate = ref<string>('')
+const startdate = ref<string>('2023-12-13')
+const addDate = ref<string>('2023-12-20')
 const handler = (val: any) => {
   console.log(startdate.value)
   console.log(val)
+  console.log(addDate.value)
 }
 </script>
 
@@ -17,9 +19,9 @@ const handler = (val: any) => {
   <div class="container my-10rem">
     <h2>Date Picker</h2>
     <div class="d-flex gap-1.5rem">
-      <DatePicker :add="2" :up="true" @handler="handler" />
-      <DatePicker v-model="startdate" min="2022-12-16" @handler="handler" />
-      <DatePicker max="2023-06-15" @handler="handler" locale="en-US" />
+      <DatePicker v-model="addDate" :add="7" :up="true" @handler="handler" />
+      <DatePicker v-model="startdate" :max="addDate" @handler="handler" />
+      <DatePicker v-model="addDate" :min="startdate" @handler="handler" locale="en-US" />
     </div>
     <p><br/></p>
     <h2>Time Picker</h2>
