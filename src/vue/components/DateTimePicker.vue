@@ -12,7 +12,9 @@ interface Props {
   min?: any,
   max?: any,
   add?: number,
-  up?: boolean
+  up?: boolean,
+  blacklist?: any[],
+  whitelist?: any[]
 }
 
 interface Emits {
@@ -29,7 +31,11 @@ const props = withDefaults(defineProps<Props>(), {
   min: null,
   max: null,
   add: 0,
-  up: false
+  up: false,
+  //@ts-ignore
+  blacklist: [],
+  //@ts-ignore
+  whitelist: []
 })
 
 const emit = defineEmits<Emits>()
@@ -277,7 +283,7 @@ const timeMinusIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height
             </svg>
           </div>
         </div>
-        <CalendarBox v-model="selected" class="tedirDateCalendar" size="small" :year="year" :month="month" :min="min" :max="max" @handler="pickedHandler" />
+        <CalendarBox v-model="selected" class="tedirDateCalendar" size="small" :year="year" :month="month" :min="min" :max="max" :blacklist="blacklist" :whitelist="whitelist" @handler="pickedHandler" />
         <div dir="ltr" class="tedirDateTimePicker tedirTimeGroup">
           <div class="group">
             <button type="button" class="button groupItem" v-html="timeMinusIcon" @click="subTimeHandler('h')"></button>

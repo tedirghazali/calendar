@@ -20,7 +20,12 @@ const handler = (val: any) => {
     <h2>Date Picker</h2>
     <div class="d-flex gap-1.5rem">
       <DatePicker v-model="addDate" :add="7" :up="true" @handler="handler" />
-      <DatePicker v-model="startdate" :max="addDate" @handler="handler" />
+      <DatePicker 
+        v-model="startdate" 
+        :max="addDate" 
+        :blacklist="['2024-01-10', '2024-01-12', '2024-01-14', '2024-01-16', '2024-01-18']" 
+        :whitelist="['2024-01-15', '2024-01-16', '2024-01-17']" 
+        @handler="handler" />
       <DatePicker v-model="addDate" :min="startdate" @handler="handler" locale="en-US" />
     </div>
     <p><br/></p>

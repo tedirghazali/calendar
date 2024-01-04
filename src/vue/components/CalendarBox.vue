@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { doubleFormat } from 'alga-js/date'
 import { ref, watch, computed } from 'vue'
 import useCalendar from '../composables/useCalendar'
 
@@ -11,7 +12,9 @@ interface Props {
   size?: string,
   week?: boolean,
   min?: any,
-  max?: any
+  max?: any,
+  blacklist?: any[],
+  whitelist?: any[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -23,7 +26,11 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'medium',
   week: false,
   min: null,
-  max: null
+  max: null,
+  //@ts-ignore
+  blacklist: [],
+  //@ts-ignore
+  whitelist: []
 })
 
 const emit = defineEmits<{
@@ -44,11 +51,11 @@ watch(() => props.modelValue, () => {
 })
 
 watch(() => props.year, () => {
-  year.value = props.year
+  year.value = props.year || new Date().getFullYear()
 })
 
 watch(() => props.month, () => {
-  month.value = props.month
+  month.value = props.month || Number(new Date().getMonth()) + 1
 })
 
 const { days, daysInMonth, daysInPrevMonth, daysInNextMonth } = useCalendar(year, month, date, locale, daytype)
@@ -111,6 +118,14 @@ const minMaxHandler = (dy: number) => {
     if(Number(newYear) === Number(year.value) && Number(newMonth) === Number(month.value) && Number(dy) >= Number(new Date(props.max).getDate())) {
       newActive = true
     }
+  }
+  //@ts-ignore
+  if(props.blacklist?.length >= 1 && props.blacklist?.includes(`${year.value}-${doubleFormat(month.value)}-${doubleFormat(dy)}`)) {
+    newActive = true
+  }
+  //@ts-ignore
+  if(props.whitelist?.length >= 1 && props.whitelist?.includes(`${year.value}-${doubleFormat(month.value)}-${doubleFormat(dy)}`)) {
+    newActive = false
   }
   return newActive
 }

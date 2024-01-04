@@ -11,7 +11,9 @@ interface Props {
   min?: any,
   max?: any,
   add?: number,
-  up?: boolean
+  up?: boolean,
+  blacklist?: any[],
+  whitelist?: any[]
 }
 
 interface Emits {
@@ -27,7 +29,11 @@ const props = withDefaults(defineProps<Props>(), {
   min: null,
   max: null,
   add: 0,
-  up: false
+  up: false,
+  //@ts-ignore
+  blacklist: [],
+  //@ts-ignore
+  whitelist: []
 })
 
 const emit = defineEmits<Emits>()
@@ -166,7 +172,7 @@ const dateInputValue = computed<any>(() => {
             </svg>
           </div>
         </div>
-        <CalendarBox v-model="selected" class="tedirDateCalendar" size="small" :year="year" :month="month" :min="min" :max="max" @handler="pickedHandler" />
+        <CalendarBox v-model="selected" class="tedirDateCalendar" size="small" :year="year" :month="month" :min="min" :max="max" :blacklist="blacklist" :whitelist="whitelist" @handler="pickedHandler" />
       </div>
     </div>
   </div>
